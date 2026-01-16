@@ -398,18 +398,18 @@ def inicializar_dados():
             "mensalidade_base": 320.00,
             "prazo_pagamento": 240,
             "produtos": {
-                "Whole Life": {"capital": "", "mensalidade": 320.00, "observacao": "Vitalício Global"},
-                "Morte com Reenquadramento Etário": {"capital": "", "mensalidade": 50.00, "observacao": "Vitalício Plus"},
-                "Morte Temporária": {"capital": "", "mensalidade": 25.00, "observacao": "20 anos"},
-                "Morte Acidental": {"capital": "", "mensalidade": 30.00, "observacao": "Vitalício"},
-                "DIT (Afastamento do Trabalho)": {"capital": "", "mensalidade": 15.00, "observacao": "Mensal"},
-                "DIH (Internação Hospitalar)": {"capital": "", "mensalidade": 10.00, "observacao": "Diária"},
-                "Doenças Graves": {"capital": "", "mensalidade": 45.00, "observacao": "30 doenças"},
-                "Invalidez Acidental": {"capital": "", "mensalidade": 35.00, "observacao": "Vitalício"},
-                "Invalidez por Doença": {"capital": "", "mensalidade": 25.00, "observacao": "Temporária"},
-                "Cirurgia": {"capital": "", "mensalidade": 20.00, "observacao": "Por evento"},
-                "Quebra de Ossos": {"capital": "", "mensalidade": 12.00, "observacao": "Por ocorrência"},
-                "SAF (Seguro Acidente Familiar)": {"capital": "", "mensalidade": 30.00, "observacao": "Familiar"}
+                "Whole Life": {"capital": "", "mensalidade": "", "observacao": "Vitalício Global"},
+                "Morte com Reenquadramento Etário": {"capital": "", "mensalidade": "", "observacao": "Vitalício Plus"},
+                "Morte Temporária": {"capital": "", "mensalidade": "", "observacao": "20 anos"},
+                "Morte Acidental": {"capital": "", "mensalidade": "", "observacao": "Vitalício"},
+                "DIT (Afastamento do Trabalho)": {"capital": "", "mensalidade": "", "observacao": "Mensal"},
+                "DIH (Internação Hospitalar)": {"capital": "", "mensalidade": "", "observacao": "Diária"},
+                "Doenças Graves": {"capital": "", "mensalidade": "", "observacao": "30 doenças"},
+                "Invalidez Acidental": {"capital": "", "mensalidade": "", "observacao": "Vitalício"},
+                "Invalidez por Doença": {"capital": "", "mensalidade": "", "observacao": "Temporária"},
+                "Cirurgia": {"capital": "", "mensalidade": "", "observacao": "Por evento"},
+                "Quebra de Ossos": {"capital": "", "mensalidade": "", "observacao": "Por ocorrência"},
+                "SAF (Seguro Acidente Familiar)": {"capital": "", "mensalidade": "", "observacao": "Familiar"}
             },
             "beneficios_adicionais": ["Cobertura internacional", "Assistência 24h global", "Resgate flexível"],
             "pontos_fortes": ["Multinacional sólida", "Coberturas amplas", "Serviço premium"],
@@ -422,18 +422,18 @@ def inicializar_dados():
             "mensalidade_base": 360.00,
             "prazo_pagamento": 260,
             "produtos": {
-                "Whole Life": {"capital": "", "mensalidade": 360.00, "observacao": "MetLife"},
-                "Morte com Reenquadramento Etário": {"capital": "", "mensalidade": 68.00, "observacao": "Vitalício"},
-                "Morte Temporária": {"capital": "", "mensalidade": 36.00, "observacao": "20 anos"},
-                "Morte Acidental": {"capital": "", "mensalidade": 46.00, "observacao": "Vitalício"},
-                "DIT (Afastamento do Trabalho)": {"capital": "", "mensalidade": 18.00, "observacao": "Mensal"},
-                "DIH (Internação Hospitalar)": {"capital": "", "mensalidade": 11.00, "observacao": "Diária"},
-                "Doenças Graves": {"capital": "", "mensalidade": 55.00, "observacao": "35 doenças"},
-                "Invalidez Acidental": {"capital": "", "mensalidade": 42.00, "observacao": "Vitalício"},
-                "Invalidez por Doença": {"capital": "", "mensalidade": 33.00, "observacao": "Temporária"},
-                "Cirurgia": {"capital": "", "mensalidade": 24.00, "observacao": "Por evento"},
-                "Quebra de Ossos": {"capital": "", "mensalidade": 14.00, "observacao": "Por ocorrência"},
-                "SAF (Seguro Acidente Familiar)": {"capital": "", "mensalidade": 35.00, "observacao": "Familiar"}
+                "Whole Life": {"capital": "", "mensalidade": "", "observacao": "MetLife"},
+                "Morte com Reenquadramento Etário": {"capital": "", "mensalidade": "", "observacao": "Vitalício"},
+                "Morte Temporária": {"capital": "", "mensalidade": "", "observacao": "20 anos"},
+                "Morte Acidental": {"capital": "", "mensalidade": "", "observacao": "Vitalício"},
+                "DIT (Afastamento do Trabalho)": {"capital": "", "mensalidade": "", "observacao": "Mensal"},
+                "DIH (Internação Hospitalar)": {"capital": "", "mensalidade": "", "observacao": "Diária"},
+                "Doenças Graves": {"capital": "", "mensalidade": "", "observacao": "35 doenças"},
+                "Invalidez Acidental": {"capital": "", "mensalidade": "", "observacao": "Vitalício"},
+                "Invalidez por Doença": {"capital": "", "mensalidade": "", "observacao": "Temporária"},
+                "Cirurgia": {"capital": "", "mensalidade": "", "observacao": "Por evento"},
+                "Quebra de Ossos": {"capital": "", "mensalidade": "", "observacao": "Por ocorrência"},
+                "SAF (Seguro Acidente Familiar)": {"capital": "", "mensalidade": "", "observacao": "Familiar"}
             },
             "beneficios_adicionais": ["Atuação corporativa", "Benefícios empresariais", "Rede global"],
             "pontos_fortes": ["Força corporativa", "Benefícios para empresas", "Presença global"],
@@ -446,18 +446,18 @@ def inicializar_dados():
             "mensalidade_base": 310.00,
             "prazo_pagamento": 240,
             "produtos": {
-                "Whole Life": {"capital": "", "mensalidade": 310.00, "observacao": "Porto Vida"},
-                "Morte com Reenquadramento Etário": {"capital": "", "mensalidade": 55.00, "observacao": "Vitalício"},
-                "Morte Temporária": {"capital": "", "mensalidade": 28.00, "observacao": "15 anos"},
-                "Morte Acidental": {"capital": "", "mensalidade": 35.00, "observacao": "Vitalício"},
-                "DIT (Afastamento do Trabalho)": {"capital": "", "mensalidade": 14.00, "observacao": "Mensal"},
-                "DIH (Internação Hospitalar)": {"capital": "", "mensalidade": 9.00, "observacao": "Diária"},
-                "Doenças Graves": {"capital": "", "mensalidade": 42.00, "observacao": "28 doenças"},
-                "Invalidez Acidental": {"capital": "", "mensalidade": 32.00, "observacao": "Vitalício"},
-                "Invalidez por Doença": {"capital": "", "mensalidade": 25.00, "observacao": "Temporária"},
-                "Cirurgia": {"capital": "", "mensalidade": 20.00, "observacao": "Por evento"},
-                "Quebra de Ossos": {"capital": "", "mensalidade": 11.00, "observacao": "Por ocorrência"},
-                "SAF (Seguro Acidente Familiar)": {"capital": "", "mensalidade": 28.00, "observacao": "Familiar"}
+                "Whole Life": {"capital": "", "mensalidade": "", "observacao": "Porto Vida"},
+                "Morte com Reenquadramento Etário": {"capital": "", "mensalidade": "", "observacao": "Vitalício"},
+                "Morte Temporária": {"capital": "", "mensalidade": "", "observacao": "15 anos"},
+                "Morte Acidental": {"capital": "", "mensalidade": "", "observacao": "Vitalício"},
+                "DIT (Afastamento do Trabalho)": {"capital": "", "mensalidade": "", "observacao": "Mensal"},
+                "DIH (Internação Hospitalar)": {"capital": "", "mensalidade": "", "observacao": "Diária"},
+                "Doenças Graves": {"capital": "", "mensalidade": "", "observacao": "28 doenças"},
+                "Invalidez Acidental": {"capital": "", "mensalidade": "", "observacao": "Vitalício"},
+                "Invalidez por Doença": {"capital": "", "mensalidade": "", "observacao": "Temporária"},
+                "Cirurgia": {"capital": "", "mensalidade": "", "observacao": "Por evento"},
+                "Quebra de Ossos": {"capital": "", "mensalidade": "", "observacao": "Por ocorrência"},
+                "SAF (Seguro Acidente Familiar)": {"capital": "", "mensalidade": "", "observacao": "Familiar"}
             },
             "beneficios_adicionais": ["Assistência residencial", "Desconto em outros seguros", "App completo"],
             "pontos_fortes": ["Marca reconhecida", "Ampla rede", "Multi-produtos"],
@@ -470,18 +470,18 @@ def inicializar_dados():
             "mensalidade_base": 230.00,
             "prazo_pagamento": 220,
             "produtos": {
-                "Whole Life": {"capital": "", "mensalidade": 230.00, "observacao": "Mag Seguros"},
-                "Morte com Reenquadramento Etário": {"capital": "", "mensalidade": 44.00, "observacao": "Vitalício"},
-                "Morte Temporária": {"capital": "", "mensalidade": 23.00, "observacao": "15 anos"},
-                "Morte Acidental": {"capital": "", "mensalidade": 30.00, "observacao": "Vitalício"},
-                "DIT (Afastamento do Trabalho)": {"capital": "", "mensalidade": 12.00, "observacao": "Mensal"},
-                "DIH (Internação Hospitalar)": {"capital": "", "mensalidade": 8.00, "observacao": "Diária"},
-                "Doenças Graves": {"capital": "", "mensalidade": 38.00, "observacao": "27 doenças"},
-                "Invalidez Acidental": {"capital": "", "mensalidade": 29.00, "observacao": "Vitalício"},
-                "Invalidez por Doença": {"capital": "", "mensalidade": 21.00, "observacao": "Temporária"},
-                "Cirurgia": {"capital": "", "mensalidade": 17.00, "observacao": "Por evento"},
-                "Quebra de Ossos": {"capital": "", "mensalidade": 11.00, "observacao": "Por ocorrência"},
-                "SAF (Seguro Acidente Familiar)": {"capital": "", "mensalidade": 22.00, "observacao": "Familiar"}
+                "Whole Life": {"capital": "", "mensalidade": "", "observacao": "Mag Seguros"},
+                "Morte com Reenquadramento Etário": {"capital": "", "mensalidade": "", "observacao": "Vitalício"},
+                "Morte Temporária": {"capital": "", "mensalidade": "", "observacao": "15 anos"},
+                "Morte Acidental": {"capital": "", "mensalidade": "", "observacao": "Vitalício"},
+                "DIT (Afastamento do Trabalho)": {"capital": "", "mensalidade": "", "observacao": "Mensal"},
+                "DIH (Internação Hospitalar)": {"capital": "", "mensalidade": "", "observacao": "Diária"},
+                "Doenças Graves": {"capital": "", "mensalidade": "", "observacao": "27 doenças"},
+                "Invalidez Acidental": {"capital": "", "mensalidade": "", "observacao": "Vitalício"},
+                "Invalidez por Doença": {"capital": "", "mensalidade": "", "observacao": "Temporária"},
+                "Cirurgia": {"capital": "", "mensalidade": "", "observacao": "Por evento"},
+                "Quebra de Ossos": {"capital": "", "mensalidade": "", "observacao": "Por ocorrência"},
+                "SAF (Seguro Acidente Familiar)": {"capital": "", "mensalidade": "", "observacao": "Familiar"}
             },
             "beneficios_adicionais": ["Foco familiar", "Atendimento personalizado", "Produtos simples"],
             "pontos_fortes": ["Atendimento próximo", "Produtos familiares", "Preço acessível"],
@@ -494,18 +494,18 @@ def inicializar_dados():
             "mensalidade_base": 330.00,
             "prazo_pagamento": 250,
             "produtos": {
-                "Whole Life": {"capital": "", "mensalidade": 330.00, "observacao": "Prudential Life"},
-                "Morte com Reenquadramento Etário": {"capital": "", "mensalidade": 62.00, "observacao": "Vitalício"},
-                "Morte Temporária": {"capital": "", "mensalidade": 33.00, "observacao": "20 anos"},
-                "Morte Acidental": {"capital": "", "mensalidade": 42.00, "observacao": "Vitalício"},
-                "DIT (Afastamento do Trabalho)": {"capital": "", "mensalidade": 16.00, "observacao": "Mensal"},
-                "DIH (Internação Hospitalar)": {"capital": "", "mensalidade": 10.00, "observacao": "Diária"},
-                "Doenças Graves": {"capital": "", "mensalidade": 48.00, "observacao": "32 doenças"},
-                "Invalidez Acidental": {"capital": "", "mensalidade": 37.00, "observacao": "Vitalício"},
-                "Invalidez por Doença": {"capital": "", "mensalidade": 29.00, "observacao": "Temporária"},
-                "Cirurgia": {"capital": "", "mensalidade": 22.00, "observacao": "Por evento"},
-                "Quebra de Ossos": {"capital": "", "mensalidade": 13.00, "observacao": "Por ocorrência"},
-                "SAF (Seguro Acidente Familiar)": {"capital": "", "mensalidade": 31.00, "observacao": "Familiar"}
+                "Whole Life": {"capital": "", "mensalidade": "", "observacao": "Prudential Life"},
+                "Morte com Reenquadramento Etário": {"capital": "", "mensalidade": "", "observacao": "Vitalício"},
+                "Morte Temporária": {"capital": "", "mensalidade": "", "observacao": "20 anos"},
+                "Morte Acidental": {"capital": "", "mensalidade": "", "observacao": "Vitalício"},
+                "DIT (Afastamento do Trabalho)": {"capital": "", "mensalidade": "", "observacao": "Mensal"},
+                "DIH (Internação Hospitalar)": {"capital": "", "mensalidade": "", "observacao": "Diária"},
+                "Doenças Graves": {"capital": "", "mensalidade": "", "observacao": "32 doenças"},
+                "Invalidez Acidental": {"capital": "", "mensalidade": "", "observacao": "Vitalício"},
+                "Invalidez por Doença": {"capital": "", "mensalidade": "", "observacao": "Temporária"},
+                "Cirurgia": {"capital": "", "mensalidade": "", "observacao": "Por evento"},
+                "Quebra de Ossos": {"capital": "", "mensalidade": "", "observacao": "Por ocorrência"},
+                "SAF (Seguro Acidente Familiar)": {"capital": "", "mensalidade": "", "observacao": "Familiar"}
             },
             "beneficios_adicionais": ["Tradição centenária", "Foco em previdência", "Investimentos sólidos"],
             "pontos_fortes": ["Solidez financeira", "Foco em longo prazo", "Portfólio completo"],
@@ -518,18 +518,18 @@ def inicializar_dados():
             "mensalidade_base": 450.00,
             "prazo_pagamento": 180,
             "produtos": {
-                "Whole Life": {"capital": "", "mensalidade": 450.00, "observacao": "Omint Premium"},
-                "Morte com Reenquadramento Etário": {"capital": "", "mensalidade": 95.00, "observacao": "Vitalício Premium"},
-                "Morte Temporária": {"capital": "", "mensalidade": 55.00, "observacao": "15 anos"},
-                "Morte Acidental": {"capital": "", "mensalidade": 70.00, "observacao": "Vitalício"},
-                "DIT (Afastamento do Trabalho)": {"capital": "", "mensalidade": 28.00, "observacao": "Mensal"},
-                "DIH (Internação Hospitalar)": {"capital": "", "mensalidade": 18.00, "observacao": "Diária"},
-                "Doenças Graves": {"capital": "", "mensalidade": 85.00, "observacao": "45 doenças"},
-                "Invalidez Acidental": {"capital": "", "mensalidade": 65.00, "observacao": "Vitalício"},
-                "Invalidez por Doença": {"capital": "", "mensalidade": 55.00, "observacao": "Temporária"},
-                "Cirurgia": {"capital": "", "mensalidade": 35.00, "observacao": "Por evento"},
-                "Quebra de Ossos": {"capital": "", "mensalidade": 20.00, "observacao": "Por ocorrência"},
-                "SAF (Seguro Acidente Familiar)": {"capital": "", "mensalidade": 55.00, "observacao": "Familiar Premium"}
+                "Whole Life": {"capital": "", "mensalidade": "", "observacao": "Omint Premium"},
+                "Morte com Reenquadramento Etário": {"capital": "", "mensalidade": "", "observacao": "Vitalício Premium"},
+                "Morte Temporária": {"capital": "", "mensalidade": "", "observacao": "15 anos"},
+                "Morte Acidental": {"capital": "", "mensalidade": "", "observacao": "Vitalício"},
+                "DIT (Afastamento do Trabalho)": {"capital": "", "mensalidade": "", "observacao": "Mensal"},
+                "DIH (Internação Hospitalar)": {"capital": "", "mensalidade": "", "observacao": "Diária"},
+                "Doenças Graves": {"capital": "", "mensalidade": "", "observacao": "45 doenças"},
+                "Invalidez Acidental": {"capital": "", "mensalidade": "", "observacao": "Vitalício"},
+                "Invalidez por Doença": {"capital": "", "mensalidade": "", "observacao": "Temporária"},
+                "Cirurgia": {"capital": "", "mensalidade": "", "observacao": "Por evento"},
+                "Quebra de Ossos": {"capital": "", "mensalidade": "", "observacao": "Por ocorrência"},
+                "SAF (Seguro Acidente Familiar)": {"capital": "", "mensalidade": "", "observacao": "Familiar Premium"}
             },
             "beneficios_adicionais": ["Rede saúde premium", "Atendimento exclusivo", "Serviços diferenciados"],
             "pontos_fortes": ["Saúde premium", "Atendimento exclusivo", "Coberturas amplas"],
@@ -542,18 +542,18 @@ def inicializar_dados():
             "mensalidade_base": 300.00,
             "prazo_pagamento": 280,
             "produtos": {
-                "Whole Life": {"capital": "", "mensalidade": 300.00, "observacao": "Icatu Vida"},
-                "Morte com Reenquadramento Etário": {"capital": "", "mensalidade": 55.00, "observacao": "Vitalício"},
-                "Morte Temporária": {"capital": "", "mensalidade": 30.00, "observacao": "18 anos"},
-                "Morte Acidental": {"capital": "", "mensalidade": 37.00, "observacao": "Vitalício"},
-                "DIT (Afastamento do Trabalho)": {"capital": "", "mensalidade": 14.00, "observacao": "Mensal"},
-                "DIH (Internação Hospitalar)": {"capital": "", "mensalidade": 9.00, "observacao": "Diária"},
-                "Doenças Graves": {"capital": "", "mensalidade": 43.00, "observacao": "30 doenças"},
-                "Invalidez Acidental": {"capital": "", "mensalidade": 34.00, "observacao": "Vitalício"},
-                "Invalidez por Doença": {"capital": "", "mensalidade": 26.00, "observacao": "Temporária"},
-                "Cirurgia": {"capital": "", "mensalidade": 20.00, "observacao": "Por evento"},
-                "Quebra de Ossos": {"capital": "", "mensalidade": 12.00, "observacao": "Por ocorrência"},
-                "SAF (Seguro Acidente Familiar)": {"capital": "", "mensalidade": 29.00, "observacao": "Familiar"}
+                "Whole Life": {"capital": "", "mensalidade": "", "observacao": "Icatu Vida"},
+                "Morte com Reenquadramento Etário": {"capital": "", "mensalidade": "", "observacao": "Vitalício"},
+                "Morte Temporária": {"capital": "", "mensalidade": "", "observacao": "18 anos"},
+                "Morte Acidental": {"capital": "", "mensalidade": "", "observacao": "Vitalício"},
+                "DIT (Afastamento do Trabalho)": {"capital": "", "mensalidade": "", "observacao": "Mensal"},
+                "DIH (Internação Hospitalar)": {"capital": "", "mensalidade": "", "observacao": "Diária"},
+                "Doenças Graves": {"capital": "", "mensalidade": "", "observacao": "30 doenças"},
+                "Invalidez Acidental": {"capital": "", "mensalidade": "", "observacao": "Vitalício"},
+                "Invalidez por Doença": {"capital": "", "mensalidade": "", "observacao": "Temporária"},
+                "Cirurgia": {"capital": "", "mensalidade": "", "observacao": "Por evento"},
+                "Quebra de Ossos": {"capital": "", "mensalidade": "", "observacao": "Por ocorrência"},
+                "SAF (Seguro Acidente Familiar)": {"capital": "", "mensalidade": "", "observacao": "Familiar"}
             },
             "beneficios_adicionais": ["Foco em previdência", "Rentabilidade atrativa", "Produtos diferenciados"],
             "pontos_fortes": ["Rentabilidade", "Foco em acumulação", "Produtos inovadores"],
@@ -567,8 +567,15 @@ def inicializar_dados():
 def calcular_resumo_financeiro(seguradora, dados, periodo_meses, taxa_ipca, tem_assistencia_domiciliar=False, tem_seguro_viagem=False):
     """Calcula o resumo financeiro considerando os prazos das coberturas"""
     
+    # Obter mensalidade do Whole Life
+    mensal_whole_life = 0
+    if "Whole Life" in dados["produtos"]:
+        mensal_whole_life = dados["produtos"]["Whole Life"].get("mensalidade", 0)
+        if isinstance(mensal_whole_life, str):
+            mensal_whole_life = converter_string_para_float(mensal_whole_life)
+    
     resultados = {
-        "mensal_whole_life": dados.get("mensalidade_base", 0),
+        "mensal_whole_life": mensal_whole_life,
         "prazo_meses": periodo_meses,
         "prazo_anos": periodo_meses / 12,
         "coberturas": {},
@@ -579,16 +586,25 @@ def calcular_resumo_financeiro(seguradora, dados, periodo_meses, taxa_ipca, tem_
     }
     
     # Calcular Whole Life (sempre vitalício)
-    total_investimento_sem_ipca_whole_life = resultados["mensal_whole_life"] * resultados["prazo_meses"]
-    
-    if taxa_ipca > 0:
-        fator_correcao = (1 + taxa_ipca/100) ** resultados["prazo_anos"]
-        total_investimento_com_ipca_whole_life = total_investimento_sem_ipca_whole_life * fator_correcao
-    else:
-        total_investimento_com_ipca_whole_life = total_investimento_sem_ipca_whole_life
-    
-    resultados["total_investimento_sem_ipca"] += total_investimento_sem_ipca_whole_life
-    resultados["total_investimento_com_ipca"] += total_investimento_com_ipca_whole_life
+    if mensal_whole_life > 0:
+        total_investimento_sem_ipca_whole_life = mensal_whole_life * resultados["prazo_meses"]
+        
+        if taxa_ipca > 0:
+            fator_correcao = (1 + taxa_ipca/100) ** resultados["prazo_anos"]
+            total_investimento_com_ipca_whole_life = total_investimento_sem_ipca_whole_life * fator_correcao
+        else:
+            total_investimento_com_ipca_whole_life = total_investimento_sem_ipca_whole_life
+        
+        resultados["total_investimento_sem_ipca"] += total_investimento_sem_ipca_whole_life
+        resultados["total_investimento_com_ipca"] += total_investimento_com_ipca_whole_life
+        
+        # Adicionar capital do Whole Life se existir
+        if "Whole Life" in dados["produtos"]:
+            capital_whole_life = dados["produtos"]["Whole Life"].get("capital", 0)
+            if isinstance(capital_whole_life, str):
+                capital_whole_life = converter_string_para_float(capital_whole_life)
+            resultados["total_capital"] += capital_whole_life
+            resultados["total_mensalidade"] += mensal_whole_life
     
     # Calcular outras coberturas
     for produto, valores in dados["produtos"].items():
@@ -598,6 +614,12 @@ def calcular_resumo_financeiro(seguradora, dados, periodo_meses, taxa_ipca, tem_
         capital = valores.get("capital", 0)
         mensalidade = valores.get("mensalidade", 0)
         observacao = valores.get("observacao", "")
+        
+        # Converter strings para float se necessário
+        if isinstance(capital, str):
+            capital = converter_string_para_float(capital)
+        if isinstance(mensalidade, str):
+            mensalidade = converter_string_para_float(mensalidade)
         
         # Extrair prazo da observação
         prazo_cobertura = extrair_prazo_observacao(observacao)
@@ -727,7 +749,7 @@ def gerar_txt(nome_cliente, idade, seguradoras_selecionadas, resultados, recomen
         for beneficio in seguradoras[recomendacao]['beneficios_adicionais']:
             texto += f"✓ {beneficio}\n"
         
-        texto += f"\n💵 Mensalidade Whole Life: {formatar_moeda(seguradoras[recomendacao]['mensalidade_base'])}\n"
+        texto += f"\n💵 Mensalidade Whole Life: {formatar_moeda(resultados[recomendacao]['mensal_whole_life'])}\n"
         texto += f"📅 Prazo: {periodos_meses.get(recomendacao, seguradoras[recomendacao]['prazo_pagamento'])} meses\n"
         
         if recomendacao in resultados:
@@ -891,9 +913,9 @@ def main():
         
         st.markdown("</div>", unsafe_allow_html=True)
     
-    # Tab 2: Coberturas (Editável) com Capital Segurado
+    # Tab 2: Coberturas (Editável) com Capital Segurado e Mensalidade
     with tab2:
-        st.markdown("## 🛡️ **EDITAR CAPITAL SEGURADO**")
+        st.markdown("## 🛡️ **EDITAR CAPITAL SEGURADO E MENSALIDADES**")
         
         st.markdown("**Digite os valores com ponto para milhares e vírgula para decimais:**")
         st.markdown("*Exemplo: 1.000.000,00 ou 1000,50*")
@@ -937,7 +959,7 @@ def main():
                 # Criar formulário para cada produto
                 for produto in produtos_comuns:
                     with st.expander(f"**{produto}**", expanded=False):
-                        col1, col2, col3 = st.columns([2, 2, 4])
+                        col1, col2, col3, col4 = st.columns([2, 2, 2, 4])
                         
                         with col1:
                             # Capital Segurado (em branco para digitar)
@@ -954,6 +976,20 @@ def main():
                             )
                         
                         with col2:
+                            # Mensalidade (em branco para digitar)
+                            if produto in seguradoras[seguradora]["produtos"]:
+                                mensalidade_atual = seguradoras[seguradora]["produtos"][produto]["mensalidade"]
+                            else:
+                                mensalidade_atual = ""
+                            
+                            nova_mensalidade = criar_input_formatado(
+                                "Mensalidade",
+                                mensalidade_atual,
+                                key=f"mensal_{seguradora}_{produto}",
+                                placeholder="Ex: 320,00"
+                            )
+                        
+                        with col3:
                             # Observação (pré-preenchida)
                             if produto in seguradoras[seguradora]["produtos"]:
                                 obs_atual = seguradoras[seguradora]["produtos"][produto]["observacao"]
@@ -966,7 +1002,7 @@ def main():
                                 key=f"obs_{seguradora}_{produto}"
                             )
                         
-                        with col3:
+                        with col4:
                             # Informações sobre prazo
                             if obs_atual:
                                 prazo = extrair_prazo_observacao(obs_atual)
@@ -981,12 +1017,15 @@ def main():
                         if produto not in seguradoras[seguradora]["produtos"]:
                             seguradoras[seguradora]["produtos"][produto] = {
                                 "capital": "",
-                                "mensalidade": 0,
+                                "mensalidade": "",
                                 "observacao": ""
                             }
                         
                         # Atualizar capital
                         seguradoras[seguradora]["produtos"][produto]["capital"] = novo_capital
+                        
+                        # Atualizar mensalidade
+                        seguradoras[seguradora]["produtos"][produto]["mensalidade"] = nova_mensalidade
                         
                         # Atualizar observação
                         seguradoras[seguradora]["produtos"][produto]["observacao"] = nova_obs
@@ -1027,7 +1066,7 @@ def main():
         coberturas_visuais = st.multiselect(
             "Selecione coberturas para visualização do capital segurado",
             produtos_comuns,
-            default=["Doenças Graves", "Invalidez Acidental", "Morte Acidental"],
+            default=["Whole Life", "Doenças Graves", "Invalidez Acidental"],
             max_selections=4
         )
         
@@ -1049,8 +1088,10 @@ def main():
                                 valores.append(valor)
                                 cores.append(seguradoras[seguradora]["cor"])
                             else:
-                                valores.append(0)
-                                cores.append("#cccccc")
+                                # Tentar converter string para float
+                                valor_float = converter_string_para_float(valor)
+                                valores.append(valor_float)
+                                cores.append(seguradoras[seguradora]["cor"])
                         else:
                             valores.append(0)
                             cores.append("#cccccc")
@@ -1197,7 +1238,7 @@ def main():
                     </div>
                     <div style='text-align: right;'>
                         <div style='font-size: 1.5rem; font-weight: bold; color: {dados["cor"]};'>
-                            {formatar_moeda(dados['mensalidade_base'])}
+                            {formatar_moeda(resultado.get('mensal_whole_life', 0))}
                         </div>
                         <div style='font-size: 0.9rem; color: #666;'>mensal Whole Life</div>
                     </div>
@@ -1545,7 +1586,7 @@ def main():
                     <div style='margin-top: 1rem;'>
                         <div style='display: flex; justify-content: space-between;'>
                             <span>Mensalidade Whole Life:</span>
-                            <span style='font-weight: bold;'>{formatar_moeda(seguradoras[recomendacao]['mensalidade_base'])}</span>
+                            <span style='font-weight: bold;'>{formatar_moeda(resultados_completos.get(recomendacao, {}).get('mensal_whole_life', 0))}</span>
                         </div>
                         <div style='display: flex; justify-content: space-between;'>
                             <span>Prazo:</span>
@@ -1634,6 +1675,7 @@ def main():
 # Executar aplicativo
 if __name__ == "__main__":
     main()
+
 
 
 
