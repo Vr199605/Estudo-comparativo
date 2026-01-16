@@ -4,6 +4,7 @@ from datetime import datetime, date
 from dateutil.relativedelta import relativedelta
 import numpy as np
 import io
+import re
 
 # Configuração da página
 st.set_page_config(
@@ -210,6 +211,16 @@ st.markdown("""
             padding: 1.5rem;
         }
     }
+    
+    /* Estilo para campos de entrada com formatação automática */
+    .formatted-input {
+        font-family: monospace;
+        text-align: right;
+    }
+    
+    .formatted-input::placeholder {
+        color: #999;
+    }
 </style>
 """, unsafe_allow_html=True)
 
@@ -219,40 +230,97 @@ def calcular_idade(data_nascimento):
     idade = relativedelta(hoje, data_nascimento).years
     return idade
 
-# Formatar valores em moeda brasileira
+# Função para formatar número brasileiro
+def formatar_numero_brasileiro(valor):
+    if pd.isna(valor) or valor is None or valor == "":
+        return "0"
+    
+    try:
+        # Se for string, limpar
+        if isinstance(valor, str):
+            valor = valor.replace('R$', '').replace(' ', '').replace('.', '').replace(',', '.')
+        
+        # Converter para float
+        valor_float = float(valor)
+        
+        # Formatar com separadores
+        if valor_float >= 1000:
+            # Formatar com pontos e vírgula
+            valor_str = f"{valor_float:,.2f}"
+            # Substituir a formatação americana pela brasileira
+            partes = valor_str.split('.')
+            parte_inteira = partes[0].replace(',', '.')
+            parte_decimal = partes[1] if len(partes) > 1 else '00'
+            
+            return f"{parte_inteira},{parte_decimal}"
+        else:
+            return f"{valor_float:.2f}".replace('.', ',')
+    except:
+        return "0"
+
+# Função para converter string formatada para float
+def converter_string_para_float(valor_str):
+    if pd.isna(valor_str) or valor_str is None or valor_str == "":
+        return 0.0
+    
+    try:
+        # Remover R$, espaços
+        valor_limpo = str(valor_str).replace('R$', '').replace(' ', '')
+        
+        # Se já estiver no formato brasileiro (1.000,00)
+        if ',' in valor_limpo and '.' in valor_limpo:
+            # Remover pontos de milhar e converter vírgula para ponto
+            valor_limpo = valor_limpo.replace('.', '').replace(',', '.')
+        # Se estiver no formato americano (1,000.00)
+        elif ',' in valor_limpo and '.' not in valor_limpo:
+            valor_limpo = valor_limpo.replace(',', '.')
+        # Se tiver apenas vírgula decimal (1000,00)
+        elif ',' in valor_limpo:
+            valor_limpo = valor_limpo.replace(',', '.')
+        
+        return float(valor_limpo)
+    except:
+        return 0.0
+
+# Função para formatar valor em moeda brasileira
 def formatar_moeda(valor):
     if pd.isna(valor) or valor is None:
         return "R$ 0,00"
     
     try:
-        # Converter para float se for string
+        # Converter para float se necessário
         if isinstance(valor, str):
-            # Remover R$, pontos e substituir vírgula por ponto
-            valor = valor.replace('R$', '').replace(' ', '').replace('.', '').replace(',', '.')
-            valor = float(valor)
+            valor_float = converter_string_para_float(valor)
+        else:
+            valor_float = float(valor)
         
-        # Formatar com separador de milhar e decimal
-        valor_formatado = f"R$ {valor:,.2f}"
-        # Substituir ponto decimal por vírgula e separador de milhar por ponto
-        valor_formatado = valor_formatado.replace(",", "X").replace(".", ",").replace("X", ".")
-        return valor_formatado
+        # Formatar como moeda brasileira
+        if valor_float >= 1000:
+            valor_str = f"{valor_float:,.2f}"
+            partes = valor_str.split('.')
+            parte_inteira = partes[0].replace(',', '.')
+            parte_decimal = partes[1] if len(partes) > 1 else '00'
+            return f"R$ {parte_inteira},{parte_decimal}"
+        else:
+            return f"R$ {valor_float:.2f}".replace('.', ',')
     except:
         return "R$ 0,00"
 
-# Converter string monetária para float
-def converter_para_float(valor_str):
-    if pd.isna(valor_str) or valor_str is None:
-        return 0.0
+# Função para criar input com formatação automática
+def criar_input_formatado(label, valor, key, placeholder="0,00"):
+    # Converter valor para formato brasileiro
+    valor_formatado = formatar_numero_brasileiro(valor) if valor not in [None, "", 0] else ""
     
-    if isinstance(valor_str, (int, float)):
-        return float(valor_str)
+    # Criar input com formatação
+    input_valor = st.text_input(
+        label,
+        value=valor_formatado,
+        key=key,
+        placeholder=placeholder
+    )
     
-    try:
-        # Remover R$, espaços e converter vírgula para ponto
-        valor_limpo = str(valor_str).replace('R$', '').replace(' ', '').replace('.', '').replace(',', '.')
-        return float(valor_limpo)
-    except:
-        return 0.0
+    # Retornar o valor convertido para float
+    return converter_string_para_float(input_valor)
 
 # Inicializar dados das seguradoras
 @st.cache_data
@@ -746,6 +814,7 @@ def main():
                 st.warning("⚠️ Selecione pelo menos uma opção")
         
         st.markdown("**Ajuste o capital segurado e mensalidade para cada cobertura:**")
+        st.markdown("💡 **Dica:** Digite apenas números (ex: 1000000 ou 1000,50) - a formatação será automática!")
         
         # Criar tabs para cada seguradora
         seguradora_tabs = st.tabs([f"✏️ {s}" for s in selecionadas])
@@ -783,23 +852,25 @@ def main():
                     col_capital_viagem, col_mensal_viagem = st.columns(2)
                     
                     with col_capital_viagem:
-                        capital_viagem = st.text_input(
-                            "Capital Seguro Viagem (R$)",
-                            value=formatar_moeda(seguradoras[seguradora].get("seguro_viagem_capital", 0)),
-                            key=f"capital_viagem_{seguradora}"
+                        capital_viagem = criar_input_formatado(
+                            "Capital Seguro Viagem",
+                            seguradoras[seguradora].get("seguro_viagem_capital", 0),
+                            key=f"capital_viagem_{seguradora}",
+                            placeholder="Ex: 5000 ou 5.000,00"
                         )
                     
                     with col_mensal_viagem:
-                        mensalidade_viagem = st.text_input(
-                            "Mensalidade Seguro Viagem (R$)",
-                            value=formatar_moeda(seguradoras[seguradora].get("seguro_viagem_mensalidade", 0)),
-                            key=f"mensal_viagem_{seguradora}"
+                        mensalidade_viagem = criar_input_formatado(
+                            "Mensalidade Seguro Viagem",
+                            seguradoras[seguradora].get("seguro_viagem_mensalidade", 0),
+                            key=f"mensal_viagem_{seguradora}",
+                            placeholder="Ex: 30 ou 30,00"
                         )
                     
                     # Atualizar valores
                     seguradoras[seguradora]["seguro_viagem"] = True
-                    seguradoras[seguradora]["seguro_viagem_capital"] = converter_para_float(capital_viagem)
-                    seguradoras[seguradora]["seguro_viagem_mensalidade"] = converter_para_float(mensalidade_viagem)
+                    seguradoras[seguradora]["seguro_viagem_capital"] = capital_viagem
+                    seguradoras[seguradora]["seguro_viagem_mensalidade"] = mensalidade_viagem
                 else:
                     # Zerar valores se não tiver seguro viagem
                     seguradoras[seguradora]["seguro_viagem"] = False
@@ -810,94 +881,93 @@ def main():
                 st.markdown("---")
                 st.markdown("### 📋 **Coberturas Principais**")
                 
-                # Criar dataframe base
-                dados_para_tabela = []
+                # Criar formulário para cada produto
                 for produto in produtos_comuns:
-                    if produto in seguradoras[seguradora]["produtos"]:
-                        linha = {
-                            "Produto": produto,
-                            "Capital Segurado (R$)": formatar_moeda(seguradoras[seguradora]["produtos"][produto]["capital"]),
-                            "Observação": seguradoras[seguradora]["produtos"][produto]["observacao"]
-                        }
+                    with st.expander(f"**{produto}**", expanded=False):
+                        col1, col2, col3, col4 = st.columns([2, 2, 2, 4])
                         
-                        # Adicionar coluna mensal se selecionado
+                        with col1:
+                            # Capital Segurado
+                            if produto in seguradoras[seguradora]["produtos"]:
+                                capital_atual = seguradoras[seguradora]["produtos"][produto]["capital"]
+                            else:
+                                capital_atual = 0
+                            
+                            novo_capital = criar_input_formatado(
+                                "Capital Segurado",
+                                capital_atual,
+                                key=f"capital_{seguradora}_{produto}",
+                                placeholder="Ex: 1000000"
+                            )
+                        
+                        with col2:
+                            # Mensalidade (se selecionado)
+                            if mostrar_mensal:
+                                if produto in seguradoras[seguradora]["produtos"]:
+                                    mensalidade_atual = seguradoras[seguradora]["produtos"][produto]["mensalidade"]
+                                else:
+                                    mensalidade_atual = 0
+                                
+                                nova_mensalidade = criar_input_formatado(
+                                    "Mensalidade",
+                                    mensalidade_atual,
+                                    key=f"mensal_{seguradora}_{produto}",
+                                    placeholder="Ex: 320,00"
+                                )
+                        
+                        with col3:
+                            # Anualidade (se selecionado)
+                            if mostrar_anual:
+                                if produto in seguradoras[seguradora]["produtos"]:
+                                    mensalidade_atual = seguradoras[seguradora]["produtos"][produto]["mensalidade"]
+                                    anualidade_atual = mensalidade_atual * 12
+                                else:
+                                    anualidade_atual = 0
+                                
+                                nova_anualidade = criar_input_formatado(
+                                    "Anualidade",
+                                    anualidade_atual,
+                                    key=f"anual_{seguradora}_{produto}",
+                                    placeholder="Ex: 3840,00"
+                                )
+                                
+                                # Se foi editado, calcular mensalidade
+                                if nova_anualidade != anualidade_atual and nova_anualidade > 0:
+                                    nova_mensalidade = nova_anualidade / 12
+                        
+                        with col4:
+                            # Observação
+                            if produto in seguradoras[seguradora]["produtos"]:
+                                obs_atual = seguradoras[seguradora]["produtos"][produto]["observacao"]
+                            else:
+                                obs_atual = ""
+                            
+                            nova_obs = st.text_input(
+                                "Observação",
+                                value=obs_atual,
+                                key=f"obs_{seguradora}_{produto}"
+                            )
+                        
+                        # Atualizar dados
+                        if produto not in seguradoras[seguradora]["produtos"]:
+                            seguradoras[seguradora]["produtos"][produto] = {
+                                "capital": 0,
+                                "mensalidade": 0,
+                                "observacao": ""
+                            }
+                        
+                        # Atualizar capital
+                        seguradoras[seguradora]["produtos"][produto]["capital"] = novo_capital
+                        
+                        # Atualizar mensalidade
                         if mostrar_mensal:
-                            linha["Mensalidade (R$)"] = formatar_moeda(seguradoras[seguradora]["produtos"][produto]["mensalidade"])
+                            seguradoras[seguradora]["produtos"][produto]["mensalidade"] = nova_mensalidade if 'nova_mensalidade' in locals() else mensalidade_atual
+                        elif mostrar_anual and 'nova_anualidade' in locals():
+                            # Se apenas anual estiver selecionado, calcular mensalidade
+                            seguradoras[seguradora]["produtos"][produto]["mensalidade"] = nova_anualidade / 12 if nova_anualidade > 0 else 0
                         
-                        # Adicionar coluna anual se selecionado
-                        if mostrar_anual:
-                            mensalidade = seguradoras[seguradora]["produtos"][produto]["mensalidade"]
-                            anualidade = float(mensalidade) * 12 if isinstance(mensalidade, (int, float)) else 0.0
-                            linha["Anualidade (R$)"] = formatar_moeda(anualidade)
-                        
-                        dados_para_tabela.append(linha)
-                    else:
-                        linha = {
-                            "Produto": produto,
-                            "Capital Segurado (R$)": formatar_moeda(0),
-                            "Observação": "Não disponível"
-                        }
-                        
-                        if mostrar_mensal:
-                            linha["Mensalidade (R$)"] = formatar_moeda(0)
-                        
-                        if mostrar_anual:
-                            linha["Anualidade (R$)"] = formatar_moeda(0)
-                        
-                        dados_para_tabela.append(linha)
-                
-                df_editar = pd.DataFrame(dados_para_tabela)
-                
-                # Configurar colunas do editor
-                column_config = {
-                    "Produto": st.column_config.TextColumn("Produto", width="medium"),
-                    "Capital Segurado (R$)": st.column_config.TextColumn("Capital Segurado (R$)", width="medium"),
-                    "Observação": st.column_config.TextColumn("Observação", width="large")
-                }
-                
-                # Adicionar configuração para mensalidade se selecionada
-                if mostrar_mensal:
-                    column_config["Mensalidade (R$)"] = st.column_config.TextColumn(
-                        "Mensalidade (R$)", 
-                        width="medium"
-                    )
-                
-                # Adicionar configuração para anualidade se selecionada
-                if mostrar_anual:
-                    column_config["Anualidade (R$)"] = st.column_config.TextColumn(
-                        "Anualidade (R$)", 
-                        width="medium"
-                    )
-                
-                # Usando st.data_editor para edição
-                st.markdown("**Edite os valores abaixo:**")
-                df_editado = st.data_editor(
-                    df_editar,
-                    column_config=column_config,
-                    use_container_width=True,
-                    num_rows="fixed",
-                    key=f"editor_{seguradora}"
-                )
-                
-                # Atualizar dados na memória
-                for _, row in df_editado.iterrows():
-                    produto = row["Produto"]
-                    if produto in seguradoras[seguradora]["produtos"]:
-                        # Atualizar capital segurado
-                        capital_str = row["Capital Segurado (R$)"]
-                        seguradoras[seguradora]["produtos"][produto]["capital"] = converter_para_float(capital_str)
-                        
-                        # Atualizar mensalidade com base no que foi editado
-                        if mostrar_mensal and "Mensalidade (R$)" in df_editado.columns:
-                            mensalidade_str = row["Mensalidade (R$)"]
-                            seguradoras[seguradora]["produtos"][produto]["mensalidade"] = converter_para_float(mensalidade_str)
-                        elif mostrar_anual and "Anualidade (R$)" in df_editado.columns:
-                            # Se editou anual, converter para mensal
-                            anual_str = row["Anualidade (R$)"]
-                            anual = converter_para_float(anual_str)
-                            seguradoras[seguradora]["produtos"][produto]["mensalidade"] = anual / 12 if anual > 0 else 0.0
-                        
-                        seguradoras[seguradora]["produtos"][produto]["observacao"] = row["Observação"]
+                        # Atualizar observação
+                        seguradoras[seguradora]["produtos"][produto]["observacao"] = nova_obs
                 
                 # Resumo financeiro para esta seguradora
                 st.markdown("---")
@@ -1613,3 +1683,4 @@ def main():
 # Executar aplicativo
 if __name__ == "__main__":
     main()
+
