@@ -219,11 +219,40 @@ def calcular_idade(data_nascimento):
     idade = relativedelta(hoje, data_nascimento).years
     return idade
 
-# Formatar valores em moeda
+# Formatar valores em moeda brasileira
 def formatar_moeda(valor):
-    if pd.isna(valor):
+    if pd.isna(valor) or valor is None:
         return "R$ 0,00"
-    return f"R$ {valor:,.2f}".replace(",", "X").replace(".", ",").replace("X", ".")
+    
+    try:
+        # Converter para float se for string
+        if isinstance(valor, str):
+            # Remover R$, pontos e substituir vírgula por ponto
+            valor = valor.replace('R$', '').replace(' ', '').replace('.', '').replace(',', '.')
+            valor = float(valor)
+        
+        # Formatar com separador de milhar e decimal
+        valor_formatado = f"R$ {valor:,.2f}"
+        # Substituir ponto decimal por vírgula e separador de milhar por ponto
+        valor_formatado = valor_formatado.replace(",", "X").replace(".", ",").replace("X", ".")
+        return valor_formatado
+    except:
+        return "R$ 0,00"
+
+# Converter string monetária para float
+def converter_para_float(valor_str):
+    if pd.isna(valor_str) or valor_str is None:
+        return 0.0
+    
+    if isinstance(valor_str, (int, float)):
+        return float(valor_str)
+    
+    try:
+        # Remover R$, espaços e converter vírgula para ponto
+        valor_limpo = str(valor_str).replace('R$', '').replace(' ', '').replace('.', '').replace(',', '.')
+        return float(valor_limpo)
+    except:
+        return 0.0
 
 # Inicializar dados das seguradoras
 @st.cache_data
@@ -241,7 +270,6 @@ def inicializar_dados():
         "Cirurgia",
         "Quebra de Ossos",
         "SAF (Seguro Acidente Familiar)",
-        "Seguro Viagem",
         "Assistência Domiciliar"
     ]
     
@@ -252,6 +280,9 @@ def inicializar_dados():
             "descricao": "Multinacional japonesa com forte presença no mercado",
             "mensalidade_base": 320.00,
             "prazo_pagamento": 240,
+            "seguro_viagem": False,
+            "seguro_viagem_capital": 0,
+            "seguro_viagem_mensalidade": 0,
             "produtos": {
                 "Whole Life": {"capital": 1000000, "mensalidade": 320.00, "observacao": "Vitalício Global", "destaque": "Cobertura Internacional"},
                 "Morte com Reenquadramento Etário": {"capital": 200000, "mensalidade": 50.00, "observacao": "Vitalício Plus"},
@@ -265,7 +296,6 @@ def inicializar_dados():
                 "Cirurgia": {"capital": 12000, "mensalidade": 20.00, "observacao": "Por evento"},
                 "Quebra de Ossos": {"capital": 15000, "mensalidade": 12.00, "observacao": "Por ocorrência"},
                 "SAF (Seguro Acidente Familiar)": {"capital": 80000, "mensalidade": 30.00, "observacao": "Familiar"},
-                "Seguro Viagem": {"capital": 0, "mensalidade": 0.00, "observacao": "Não possui"},
                 "Assistência Domiciliar": {"capital": 2000, "mensalidade": 15.00, "observacao": "Até 12 visitas/ano"}
             },
             "beneficios_adicionais": ["Cobertura internacional", "Assistência 24h global", "Resgate flexível"],
@@ -279,6 +309,9 @@ def inicializar_dados():
             "descricao": "Líder global em seguros com forte atuação corporativa",
             "mensalidade_base": 360.00,
             "prazo_pagamento": 260,
+            "seguro_viagem": True,
+            "seguro_viagem_capital": 5505,
+            "seguro_viagem_mensalidade": 30.00,
             "produtos": {
                 "Whole Life": {"capital": 1300000, "mensalidade": 360.00, "observacao": "MetLife", "destaque": "Líder Global"},
                 "Morte com Reenquadramento Etário": {"capital": 190000, "mensalidade": 68.00, "observacao": "Vitalício"},
@@ -292,7 +325,6 @@ def inicializar_dados():
                 "Cirurgia": {"capital": 12500, "mensalidade": 24.00, "observacao": "Por evento"},
                 "Quebra de Ossos": {"capital": 16000, "mensalidade": 14.00, "observacao": "Por ocorrência"},
                 "SAF (Seguro Acidente Familiar)": {"capital": 90000, "mensalidade": 35.00, "observacao": "Familiar"},
-                "Seguro Viagem": {"capital": 5505, "mensalidade": 30.00, "observacao": "Internacional"},
                 "Assistência Domiciliar": {"capital": 2600, "mensalidade": 19.00, "observacao": "Até 16 visitas/ano"}
             },
             "beneficios_adicionais": ["Atuação corporativa", "Benefícios empresariais", "Rede global"],
@@ -306,6 +338,9 @@ def inicializar_dados():
             "descricao": "Uma das maiores seguradoras do Brasil, conhecida por automóveis",
             "mensalidade_base": 310.00,
             "prazo_pagamento": 240,
+            "seguro_viagem": True,
+            "seguro_viagem_capital": 3000,
+            "seguro_viagem_mensalidade": 20.00,
             "produtos": {
                 "Whole Life": {"capital": 900000, "mensalidade": 310.00, "observacao": "Porto Vida", "destaque": "Marca Forte"},
                 "Morte com Reenquadramento Etário": {"capital": 150000, "mensalidade": 55.00, "observacao": "Vitalício"},
@@ -319,7 +354,6 @@ def inicializar_dados():
                 "Cirurgia": {"capital": 10000, "mensalidade": 20.00, "observacao": "Por evento"},
                 "Quebra de Ossos": {"capital": 12000, "mensalidade": 11.00, "observacao": "Por ocorrência"},
                 "SAF (Seguro Acidente Familiar)": {"capital": 70000, "mensalidade": 28.00, "observacao": "Familiar"},
-                "Seguro Viagem": {"capital": 3000, "mensalidade": 20.00, "observacao": "Nacional"},
                 "Assistência Domiciliar": {"capital": 1800, "mensalidade": 14.00, "observacao": "Até 12 visitas/ano"}
             },
             "beneficios_adicionais": ["Assistência residencial", "Desconto em outros seguros", "App completo"],
@@ -333,6 +367,9 @@ def inicializar_dados():
             "descricao": "Seguradora com foco em seguros pessoais e familiares",
             "mensalidade_base": 230.00,
             "prazo_pagamento": 220,
+            "seguro_viagem": True,
+            "seguro_viagem_capital": 3000,
+            "seguro_viagem_mensalidade": 20.00,
             "produtos": {
                 "Whole Life": {"capital": 650000, "mensalidade": 230.00, "observacao": "Mag Seguros", "destaque": "Foco Familiar"},
                 "Morte com Reenquadramento Etário": {"capital": 105000, "mensalidade": 44.00, "observacao": "Vitalício"},
@@ -346,7 +383,6 @@ def inicializar_dados():
                 "Cirurgia": {"capital": 7500, "mensalidade": 17.00, "observacao": "Por evento"},
                 "Quebra de Ossos": {"capital": 11000, "mensalidade": 11.00, "observacao": "Por ocorrência"},
                 "SAF (Seguro Acidente Familiar)": {"capital": 52500, "mensalidade": 22.00, "observacao": "Familiar"},
-                "Seguro Viagem": {"capital": 3000, "mensalidade": 20.00, "observacao": "Nacional"},
                 "Assistência Domiciliar": {"capital": 1600, "mensalidade": 13.00, "observacao": "Até 10 visitas/ano"}
             },
             "beneficios_adicionais": ["Foco familiar", "Atendimento personalizado", "Produtos simples"],
@@ -360,6 +396,9 @@ def inicializar_dados():
             "descricao": "Multinacional americana com tradição em seguros de vida",
             "mensalidade_base": 330.00,
             "prazo_pagamento": 250,
+            "seguro_viagem": True,
+            "seguro_viagem_capital": 5000,
+            "seguro_viagem_mensalidade": 28.00,
             "produtos": {
                 "Whole Life": {"capital": 1100000, "mensalidade": 330.00, "observacao": "Prudential Life", "destaque": "Tradição Americana"},
                 "Morte com Reenquadramento Etário": {"capital": 170000, "mensalidade": 62.00, "observacao": "Vitalício"},
@@ -373,7 +412,6 @@ def inicializar_dados():
                 "Cirurgia": {"capital": 11500, "mensalidade": 22.00, "observacao": "Por evento"},
                 "Quebra de Ossos": {"capital": 14500, "mensalidade": 13.00, "observacao": "Por ocorrência"},
                 "SAF (Seguro Acidente Familiar)": {"capital": 80000, "mensalidade": 31.00, "observacao": "Familiar"},
-                "Seguro Viagem": {"capital": 5000, "mensalidade": 28.00, "observacao": "Internacional"},
                 "Assistência Domiciliar": {"capital": 2300, "mensalidade": 17.00, "observacao": "Até 14 visitas/ano"}
             },
             "beneficios_adicionais": ["Tradição centenária", "Foco em previdência", "Investimentos sólidos"],
@@ -387,6 +425,9 @@ def inicializar_dados():
             "descricao": "Especializada em saúde premium e seguros de alta renda",
             "mensalidade_base": 450.00,
             "prazo_pagamento": 180,
+            "seguro_viagem": True,
+            "seguro_viagem_capital": 12000,
+            "seguro_viagem_mensalidade": 45.00,
             "produtos": {
                 "Whole Life": {"capital": 1800000, "mensalidade": 450.00, "observacao": "Omint Premium", "destaque": "Saúde Premium"},
                 "Morte com Reenquadramento Etário": {"capital": 280000, "mensalidade": 95.00, "observacao": "Vitalício Premium"},
@@ -400,7 +441,6 @@ def inicializar_dados():
                 "Cirurgia": {"capital": 18000, "mensalidade": 35.00, "observacao": "Por evento"},
                 "Quebra de Ossos": {"capital": 22000, "mensalidade": 20.00, "observacao": "Por ocorrência"},
                 "SAF (Seguro Acidente Familiar)": {"capital": 140000, "mensalidade": 55.00, "observacao": "Familiar Premium"},
-                "Seguro Viagem": {"capital": 12000, "mensalidade": 45.00, "observacao": "Global Premium"},
                 "Assistência Domiciliar": {"capital": 5000, "mensalidade": 30.00, "observacao": "Até 30 visitas/ano"}
             },
             "beneficios_adicionais": ["Rede saúde premium", "Atendimento exclusivo", "Serviços diferenciados"],
@@ -414,6 +454,9 @@ def inicializar_dados():
             "descricao": "Foco em previdência e seguros de vida com rentabilidade",
             "mensalidade_base": 300.00,
             "prazo_pagamento": 280,
+            "seguro_viagem": True,
+            "seguro_viagem_capital": 4000,
+            "seguro_viagem_mensalidade": 25.00,
             "produtos": {
                 "Whole Life": {"capital": 950000, "mensalidade": 300.00, "observacao": "Icatu Vida", "destaque": "Rentabilidade"},
                 "Morte com Reenquadramento Etário": {"capital": 145000, "mensalidade": 55.00, "observacao": "Vitalício"},
@@ -427,7 +470,6 @@ def inicializar_dados():
                 "Cirurgia": {"capital": 9500, "mensalidade": 20.00, "observacao": "Por evento"},
                 "Quebra de Ossos": {"capital": 13500, "mensalidade": 12.00, "observacao": "Por ocorrência"},
                 "SAF (Seguro Acidente Familiar)": {"capital": 72500, "mensalidade": 29.00, "observacao": "Familiar"},
-                "Seguro Viagem": {"capital": 4000, "mensalidade": 25.00, "observacao": "Internacional"},
                 "Assistência Domiciliar": {"capital": 1900, "mensalidade": 15.00, "observacao": "Até 12 visitas/ano"}
             },
             "beneficios_adicionais": ["Foco em previdência", "Rentabilidade atrativa", "Produtos diferenciados"],
@@ -551,7 +593,7 @@ def main():
         <h3 style='font-weight: 300; margin-bottom: 2rem;'>Análise completa para tomada de decisão estratégica</h3>
         <div style='display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap;'>
             <span class='badge badge-success'>7 Seguradoras</span>
-            <span class='badge badge-info'>14 Coberturas</span>
+            <span class='badge badge-info'>13 Coberturas</span>
             <span class='badge badge-warning'>Análise Personalizada</span>
             <span class='badge badge-danger'>Relatório Completo</span>
         </div>
@@ -722,38 +764,85 @@ def main():
                 </div>
                 """, unsafe_allow_html=True)
                 
+                # Checklist para Seguro Viagem
+                st.markdown("### ✈️ **Seguro Viagem**")
+                col_viagem1, col_viagem2 = st.columns(2)
+                
+                with col_viagem1:
+                    tem_seguro_viagem = st.checkbox(
+                        "Oferece Seguro Viagem?",
+                        value=seguradoras[seguradora].get("seguro_viagem", False),
+                        key=f"seguro_viagem_{seguradora}"
+                    )
+                
+                # Se tiver seguro viagem, mostrar campos
+                if tem_seguro_viagem:
+                    with col_viagem2:
+                        st.info("✅ Seguro Viagem disponível")
+                    
+                    col_capital_viagem, col_mensal_viagem = st.columns(2)
+                    
+                    with col_capital_viagem:
+                        capital_viagem = st.text_input(
+                            "Capital Seguro Viagem (R$)",
+                            value=formatar_moeda(seguradoras[seguradora].get("seguro_viagem_capital", 0)),
+                            key=f"capital_viagem_{seguradora}"
+                        )
+                    
+                    with col_mensal_viagem:
+                        mensalidade_viagem = st.text_input(
+                            "Mensalidade Seguro Viagem (R$)",
+                            value=formatar_moeda(seguradoras[seguradora].get("seguro_viagem_mensalidade", 0)),
+                            key=f"mensal_viagem_{seguradora}"
+                        )
+                    
+                    # Atualizar valores
+                    seguradoras[seguradora]["seguro_viagem"] = True
+                    seguradoras[seguradora]["seguro_viagem_capital"] = converter_para_float(capital_viagem)
+                    seguradoras[seguradora]["seguro_viagem_mensalidade"] = converter_para_float(mensalidade_viagem)
+                else:
+                    # Zerar valores se não tiver seguro viagem
+                    seguradoras[seguradora]["seguro_viagem"] = False
+                    seguradoras[seguradora]["seguro_viagem_capital"] = 0
+                    seguradoras[seguradora]["seguro_viagem_mensalidade"] = 0
+                    st.warning("❌ Seguro Viagem não disponível")
+                
+                st.markdown("---")
+                st.markdown("### 📋 **Coberturas Principais**")
+                
                 # Criar dataframe base
                 dados_para_tabela = []
                 for produto in produtos_comuns:
                     if produto in seguradoras[seguradora]["produtos"]:
                         linha = {
                             "Produto": produto,
-                            "Capital Segurado (R$)": float(seguradoras[seguradora]["produtos"][produto]["capital"]),
+                            "Capital Segurado (R$)": formatar_moeda(seguradoras[seguradora]["produtos"][produto]["capital"]),
                             "Observação": seguradoras[seguradora]["produtos"][produto]["observacao"]
                         }
                         
                         # Adicionar coluna mensal se selecionado
                         if mostrar_mensal:
-                            linha["Mensalidade (R$)"] = float(seguradoras[seguradora]["produtos"][produto]["mensalidade"])
+                            linha["Mensalidade (R$)"] = formatar_moeda(seguradoras[seguradora]["produtos"][produto]["mensalidade"])
                         
                         # Adicionar coluna anual se selecionado
                         if mostrar_anual:
                             mensalidade = seguradoras[seguradora]["produtos"][produto]["mensalidade"]
-                            linha["Anualidade (R$)"] = float(mensalidade) * 12 if isinstance(mensalidade, (int, float)) else 0.0
+                            anualidade = float(mensalidade) * 12 if isinstance(mensalidade, (int, float)) else 0.0
+                            linha["Anualidade (R$)"] = formatar_moeda(anualidade)
                         
                         dados_para_tabela.append(linha)
                     else:
                         linha = {
                             "Produto": produto,
-                            "Capital Segurado (R$)": 0.0,
+                            "Capital Segurado (R$)": formatar_moeda(0),
                             "Observação": "Não disponível"
                         }
                         
                         if mostrar_mensal:
-                            linha["Mensalidade (R$)"] = 0.0
+                            linha["Mensalidade (R$)"] = formatar_moeda(0)
                         
                         if mostrar_anual:
-                            linha["Anualidade (R$)"] = 0.0
+                            linha["Anualidade (R$)"] = formatar_moeda(0)
                         
                         dados_para_tabela.append(linha)
                 
@@ -762,28 +851,22 @@ def main():
                 # Configurar colunas do editor
                 column_config = {
                     "Produto": st.column_config.TextColumn("Produto", width="medium"),
-                    "Capital Segurado (R$)": st.column_config.NumberColumn("Capital Segurado (R$)", min_value=0, max_value=10000000, step=1000, format="R$ %d"),
+                    "Capital Segurado (R$)": st.column_config.TextColumn("Capital Segurado (R$)", width="medium"),
                     "Observação": st.column_config.TextColumn("Observação", width="large")
                 }
                 
                 # Adicionar configuração para mensalidade se selecionada
                 if mostrar_mensal:
-                    column_config["Mensalidade (R$)"] = st.column_config.NumberColumn(
+                    column_config["Mensalidade (R$)"] = st.column_config.TextColumn(
                         "Mensalidade (R$)", 
-                        min_value=0, 
-                        max_value=10000, 
-                        step=1, 
-                        format="R$ %.2f"
+                        width="medium"
                     )
                 
                 # Adicionar configuração para anualidade se selecionada
                 if mostrar_anual:
-                    column_config["Anualidade (R$)"] = st.column_config.NumberColumn(
+                    column_config["Anualidade (R$)"] = st.column_config.TextColumn(
                         "Anualidade (R$)", 
-                        min_value=0, 
-                        max_value=120000, 
-                        step=1, 
-                        format="R$ %.2f"
+                        width="medium"
                     )
                 
                 # Usando st.data_editor para edição
@@ -801,14 +884,17 @@ def main():
                     produto = row["Produto"]
                     if produto in seguradoras[seguradora]["produtos"]:
                         # Atualizar capital segurado
-                        seguradoras[seguradora]["produtos"][produto]["capital"] = row["Capital Segurado (R$)"]
+                        capital_str = row["Capital Segurado (R$)"]
+                        seguradoras[seguradora]["produtos"][produto]["capital"] = converter_para_float(capital_str)
                         
                         # Atualizar mensalidade com base no que foi editado
                         if mostrar_mensal and "Mensalidade (R$)" in df_editado.columns:
-                            seguradoras[seguradora]["produtos"][produto]["mensalidade"] = row["Mensalidade (R$)"]
+                            mensalidade_str = row["Mensalidade (R$)"]
+                            seguradoras[seguradora]["produtos"][produto]["mensalidade"] = converter_para_float(mensalidade_str)
                         elif mostrar_anual and "Anualidade (R$)" in df_editado.columns:
                             # Se editou anual, converter para mensal
-                            anual = row["Anualidade (R$)"]
+                            anual_str = row["Anualidade (R$)"]
+                            anual = converter_para_float(anual_str)
                             seguradoras[seguradora]["produtos"][produto]["mensalidade"] = anual / 12 if anual > 0 else 0.0
                         
                         seguradoras[seguradora]["produtos"][produto]["observacao"] = row["Observação"]
@@ -820,22 +906,33 @@ def main():
                 col_res1, col_res2, col_res3 = st.columns(3)
                 
                 with col_res1:
-                    total_capital = df_editado["Capital Segurado (R$)"].sum()
+                    # Calcular capital total (incluindo seguro viagem)
+                    total_capital = sum([
+                        p["capital"] for p in seguradoras[seguradora]["produtos"].values() 
+                        if isinstance(p["capital"], (int, float))
+                    ])
+                    if tem_seguro_viagem:
+                        total_capital += seguradoras[seguradora]["seguro_viagem_capital"]
+                    
                     st.metric("Capital Segurado Total", formatar_moeda(total_capital))
                 
                 with col_res2:
-                    if mostrar_mensal and "Mensalidade (R$)" in df_editado.columns:
-                        total_mensal = df_editado["Mensalidade (R$)"].sum()
+                    # Calcular mensalidade total
+                    total_mensal = sum([
+                        p["mensalidade"] for p in seguradoras[seguradora]["produtos"].values() 
+                        if isinstance(p["mensalidade"], (int, float))
+                    ])
+                    if tem_seguro_viagem:
+                        total_mensal += seguradoras[seguradora]["seguro_viagem_mensalidade"]
+                    
+                    if mostrar_mensal:
                         st.metric("Mensalidade Total", formatar_moeda(total_mensal))
-                    elif mostrar_anual and "Anualidade (R$)" in df_editado.columns:
-                        total_anual = df_editado["Anualidade (R$)"].sum()
-                        st.metric("Anualidade Total", formatar_moeda(total_anual))
+                    elif mostrar_anual:
+                        st.metric("Anualidade Total", formatar_moeda(total_mensal * 12))
                 
                 with col_res3:
-                    if mostrar_mensal and mostrar_anual and "Mensalidade (R$)" in df_editado.columns and "Anualidade (R$)" in df_editado.columns:
-                        total_mensal = df_editado["Mensalidade (R$)"].sum()
-                        total_anual_calculado = total_mensal * 12
-                        st.metric("Anual Calculado", formatar_moeda(total_anual_calculado))
+                    if mostrar_mensal and mostrar_anual:
+                        st.metric("Anual Calculado", formatar_moeda(total_mensal * 12))
         
         # Resumo visual das coberturas principais
         st.markdown("---")
@@ -927,11 +1024,19 @@ def main():
                 if isinstance(p["capital"], (int, float))
             ])
             
+            # Adicionar seguro viagem se tiver
+            if dados.get("seguro_viagem", False):
+                total_capital += dados.get("seguro_viagem_capital", 0)
+            
             # Calcular total de mensalidade das coberturas
             total_mensalidade_coberturas = sum([
                 p["mensalidade"] for p in dados["produtos"].values() 
                 if isinstance(p["mensalidade"], (int, float)) and p["mensalidade"] > 0
             ])
+            
+            # Adicionar mensalidade do seguro viagem se tiver
+            if dados.get("seguro_viagem", False):
+                total_mensalidade_coberturas += dados.get("seguro_viagem_mensalidade", 0)
             
             resultados[seguradora] = {
                 "mensal": mensal,
@@ -1134,6 +1239,19 @@ def main():
                                 <div style='font-size: 0.8rem; color: #666;'>{obs}</div>
                             </div>
                             """, unsafe_allow_html=True)
+                
+                # Mostrar seguro viagem se tiver
+                if dados.get("seguro_viagem", False) and dados.get("seguro_viagem_capital", 0) > 0:
+                    st.markdown(f"""
+                    <div style='background: {dados["cor"]}10; padding: 0.75rem; border-radius: 10px; margin-bottom: 0.5rem;'>
+                        <div style='font-weight: 600; margin-bottom: 0.25rem;'>✈️ Seguro Viagem</div>
+                        <div style='display: flex; justify-content: space-between; margin-bottom: 0.25rem;'>
+                            <span style='font-weight: bold; color: {dados["cor"]};'>Capital: {formatar_moeda(dados.get("seguro_viagem_capital", 0))}</span>
+                            <span style='font-size: 0.85rem; color: #666;'>Mensal: {formatar_moeda(dados.get("seguro_viagem_mensalidade", 0))}</span>
+                        </div>
+                        <div style='font-size: 0.8rem; color: #666;'>Cobertura para viagens</div>
+                    </div>
+                    """, unsafe_allow_html=True)
             
             st.markdown("</div>")
             
