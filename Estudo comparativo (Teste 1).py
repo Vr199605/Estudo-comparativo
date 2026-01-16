@@ -913,9 +913,29 @@ def main():
         
         st.markdown("</div>", unsafe_allow_html=True)
     
-    # Tab 2: Coberturas (Editável) com Capital Segurado e Mensalidade
+    # Tab 2: Coberturas (Editável) com Capital Segurado e Mensalidades
     with tab2:
         st.markdown("## 🛡️ **EDITAR CAPITAL SEGURADO E MENSALIDADES**")
+        
+        # Checklist para escolher entre mensal ou anual
+        st.markdown("### 📅 **Escolha o período das mensalidades:**")
+        col_check1, col_check2, col_check3 = st.columns([1, 1, 2])
+        
+        with col_check1:
+            mostrar_mensal = st.checkbox("Mensal", value=True, key="check_mensal")
+        
+        with col_check2:
+            mostrar_anual = st.checkbox("Anual", value=False, key="check_anual")
+        
+        with col_check3:
+            if mostrar_mensal and mostrar_anual:
+                st.success("✅ Mostrando valores mensais e anuais")
+            elif mostrar_mensal:
+                st.info("📅 Mostrando apenas valores mensais")
+            elif mostrar_anual:
+                st.info("📊 Mostrando apenas valores anuais")
+            else:
+                st.warning("⚠️ Selecione pelo menos uma opção")
         
         st.markdown("**Digite os valores com ponto para milhares e vírgula para decimais:**")
         st.markdown("*Exemplo: 1.000.000,00 ou 1000,50*")
@@ -976,21 +996,46 @@ def main():
                             )
                         
                         with col2:
-                            # Mensalidade (em branco para digitar)
-                            if produto in seguradoras[seguradora]["produtos"]:
-                                mensalidade_atual = seguradoras[seguradora]["produtos"][produto]["mensalidade"]
-                            else:
-                                mensalidade_atual = ""
-                            
-                            nova_mensalidade = criar_input_formatado(
-                                "Mensalidade",
-                                mensalidade_atual,
-                                key=f"mensal_{seguradora}_{produto}",
-                                placeholder="Ex: 320,00"
-                            )
+                            # Mensalidade (se selecionado)
+                            if mostrar_mensal:
+                                if produto in seguradoras[seguradora]["produtos"]:
+                                    mensalidade_atual = seguradoras[seguradora]["produtos"][produto]["mensalidade"]
+                                else:
+                                    mensalidade_atual = ""
+                                
+                                nova_mensalidade = criar_input_formatado(
+                                    "Mensalidade",
+                                    mensalidade_atual,
+                                    key=f"mensal_{seguradora}_{produto}",
+                                    placeholder="Ex: 320,00"
+                                )
                         
                         with col3:
-                            # Observação (pré-preenchida)
+                            # Anualidade (se selecionado)
+                            if mostrar_anual:
+                                if produto in seguradoras[seguradora]["produtos"]:
+                                    mensalidade_atual = seguradoras[seguradora]["produtos"][produto]["mensalidade"]
+                                    if isinstance(mensalidade_atual, str):
+                                        mensalidade_float = converter_string_para_float(mensalidade_atual)
+                                    else:
+                                        mensalidade_float = mensalidade_atual
+                                    anualidade_atual = mensalidade_float * 12
+                                else:
+                                    anualidade_atual = ""
+                                
+                                nova_anualidade = criar_input_formatado(
+                                    "Anualidade",
+                                    anualidade_atual,
+                                    key=f"anual_{seguradora}_{produto}",
+                                    placeholder="Ex: 3840,00"
+                                )
+                                
+                                # Se foi editado, calcular mensalidade
+                                if nova_anualidade != anualidade_atual and nova_anualidade > 0:
+                                    nova_mensalidade = nova_anualidade / 12
+                        
+                        with col4:
+                            # Observação
                             if produto in seguradoras[seguradora]["produtos"]:
                                 obs_atual = seguradoras[seguradora]["produtos"][produto]["observacao"]
                             else:
@@ -1001,17 +1046,6 @@ def main():
                                 value=obs_atual,
                                 key=f"obs_{seguradora}_{produto}"
                             )
-                        
-                        with col4:
-                            # Informações sobre prazo
-                            if obs_atual:
-                                prazo = extrair_prazo_observacao(obs_atual)
-                                if prazo == "vitalicio":
-                                    st.info("📅 **Vitalício** - Paga enquanto o seguro estiver ativo")
-                                elif prazo:
-                                    st.info(f"📅 **Prazo:** {prazo} meses ({prazo//12} anos)")
-                                else:
-                                    st.info("ℹ️ Prazo não especificado")
                         
                         # Atualizar dados
                         if produto not in seguradoras[seguradora]["produtos"]:
@@ -1025,7 +1059,11 @@ def main():
                         seguradoras[seguradora]["produtos"][produto]["capital"] = novo_capital
                         
                         # Atualizar mensalidade
-                        seguradoras[seguradora]["produtos"][produto]["mensalidade"] = nova_mensalidade
+                        if mostrar_mensal:
+                            seguradoras[seguradora]["produtos"][produto]["mensalidade"] = nova_mensalidade if 'nova_mensalidade' in locals() else mensalidade_atual
+                        elif mostrar_anual and 'nova_anualidade' in locals():
+                            # Se apenas anual estiver selecionado, calcular mensalidade
+                            seguradoras[seguradora]["produtos"][produto]["mensalidade"] = nova_anualidade / 12 if nova_anualidade > 0 else ""
                         
                         # Atualizar observação
                         seguradoras[seguradora]["produtos"][produto]["observacao"] = nova_obs
@@ -1050,7 +1088,10 @@ def main():
                     st.metric("Capital Total", formatar_moeda(resultados_seguradora["total_capital"]))
                 
                 with col_res2:
-                    st.metric("Mensalidade Total", formatar_moeda(resultados_seguradora["total_mensalidade"]))
+                    if mostrar_mensal:
+                        st.metric("Mensalidade Total", formatar_moeda(resultados_seguradora["total_mensalidade"]))
+                    elif mostrar_anual:
+                        st.metric("Anualidade Total", formatar_moeda(resultados_seguradora["total_mensalidade"] * 12))
                 
                 with col_res3:
                     st.metric("Prazo Principal", f"{resultados_seguradora['prazo_meses']} meses")
@@ -1675,6 +1716,7 @@ def main():
 # Executar aplicativo
 if __name__ == "__main__":
     main()
+
 
 
 
