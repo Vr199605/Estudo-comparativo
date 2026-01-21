@@ -563,44 +563,23 @@ def inicializar_dados():
     
     return seguradoras, produtos_comuns
 
-# Função para calcular juros compostos estilo HP12C (valor futuro de uma série de pagamentos)
-def calcular_juros_compostos_hp12c(pmt, n, i):
-    """
-    Calcula o valor futuro (FV) usando fórmula HP12C para séries de pagamentos
-    Fórmula: FV = PMT * [(1 + i)^n - 1] / i
-    
-    Onde:
-    PMT = Pagamento mensal (valor negativo na HP12C, mas usamos positivo aqui)
-    n = Número de períodos (meses)
-    i = Taxa de juros por período (mensal)
-    
-    Esta é a fórmula para Valor Futuro de uma Série Uniforme Postecipada
-    """
-    if i <= 0 or pmt <= 0 or n <= 0:
-        return pmt * n
-    
-    # Calcular usando a fórmula HP12C
-    fv = pmt * (((1 + i) ** n) - 1) / i
-    
-    return fv
-
 # Função para calcular investimento total COM JUROS COMPOSTOS APENAS NO WHOLE LIFE
 def calcular_investimento_com_juros_compostos(mensalidade, periodo_meses, taxa_ipca_anual):
-    """Calcula o valor total investido com juros compostos aplicados mensalmente estilo HP12C"""
-    if mensalidade <= 0 or periodo_meses <= 0:
+    """Calcula o valor total investido com juros compostos aplicados mensalmente"""
+    if mensalidade <= 0 or periodo_meses <= 0 or taxa_ipca_anual <= 0:
         return mensalidade * periodo_meses
     
-    if taxa_ipca_anual <= 0:
-        return mensalidade * periodo_meses
+    # Converter taxa anual para mensal
+    taxa_mensal = (1 + taxa_ipca_anual/100) ** (1/12) - 1
     
-    # Converter taxa anual para mensal (dividir por 12, estilo HP12C simples)
-    # Na HP12C, para cálculo de séries, usamos a taxa periódica equivalente
-    taxa_mensal = taxa_ipca_anual / 100 / 12
+    # Calcular valor futuro com juros compostos
+    valor_futuro = 0
+    for mes in range(1, periodo_meses + 1):
+        # Cada pagamento mensal cresce com juros compostos pelo tempo restante
+        meses_restantes = periodo_meses - mes
+        valor_futuro += mensalidade * ((1 + taxa_mensal) ** meses_restantes)
     
-    # Usar fórmula HP12C para valor futuro de série uniforme
-    fv = calcular_juros_compostos_hp12c(mensalidade, periodo_meses, taxa_mensal)
-    
-    return fv
+    return valor_futuro
 
 # Função para calcular resumo financeiro COM CORREÇÃO: Apenas Whole Life recebe correção do IPCA com juros compostos
 def calcular_resumo_financeiro(seguradora, dados, periodo_meses, taxa_ipca, tem_assistencia_domiciliar=False, tem_seguro_viagem=False, tem_telemedicina=False):
@@ -630,7 +609,7 @@ def calcular_resumo_financeiro(seguradora, dados, periodo_meses, taxa_ipca, tem_
     if mensal_whole_life > 0:
         total_investimento_sem_ipca_whole_life = mensal_whole_life * resultados["prazo_meses"]
         
-        # Aplicar juros compostos APENAS no Whole Life (estilo HP12C)
+        # Aplicar juros compostos APENAS no Whole Life
         if taxa_ipca > 0:
             total_investimento_com_ipca_whole_life = calcular_investimento_com_juros_compostos(
                 mensal_whole_life, 
@@ -1173,7 +1152,7 @@ def main():
                 with col_res4:
                     # Mostrar valor corrigido com juros compostos
                     st.metric("Total Investido com IPCA*", formatar_moeda(resultados_seguradora["total_investimento_com_ipca"]))
-                    st.caption("*IPCA com juros compostos (HP12C) aplicado apenas ao Whole Life")
+                    st.caption("*IPCA com juros compostos aplicado apenas ao Whole Life")
         
         # Resumo visual das coberturas principais
         st.markdown("---")
@@ -1239,7 +1218,7 @@ def main():
     # Tab 3: Análise Financeira
     with tab3:
         st.markdown("## 💰 **ANÁLISE FINANCEIRA DETALHADA**")
-        st.markdown("**Nota:** A correção do IPCA com **juros compostos estilo HP12C** é aplicada apenas ao Whole Life.")
+        st.markdown("**Nota:** A correção do IPCA com **juros compostos** é aplicada apenas ao Whole Life.")
         
         # Calcular resultados para todas as seguradoras
         resultados_completos = {}
@@ -1265,6 +1244,10 @@ def main():
             for seguradora, dados in resultados_completos.items():
                 cor = seguradoras[seguradora]["cor"]
                 porcentagem = (dados["total_investimento_com_ipca"] / max_val) * 100 if max_val > 0 else 0
+                
+                # Calcular apenas o Whole Life com juros compostos
+                mensal_wl = dados['mensal_whole_life']
+                prazo = dados['prazo_meses']
                 
                 st.markdown(f"""
                 <div style='margin: 1rem 0;'>
@@ -1305,7 +1288,7 @@ def main():
             
             df_comparativo = pd.DataFrame(dados_tabela)
             st.dataframe(df_comparativo, use_container_width=True)
-            st.caption("*IPCA com juros compostos (HP12C) aplicado apenas ao Whole Life")
+            st.caption("*IPCA com juros compostos aplicado apenas ao Whole Life")
             
             # Exemplo de cálculo para Mag Seguros
             if "Mag Seguros" in resultados_completos:
@@ -1318,7 +1301,7 @@ def main():
                 com_ipca = calcular_investimento_com_juros_compostos(mensal_wl, prazo, taxa_ipca)
                 
                 st.markdown("---")
-                st.markdown("### 🧮 **EXEMPLO DE CÁLCULO HP12C PARA MAG SEGUROS**")
+                st.markdown("### 🧮 **EXEMPLO DE CÁLCULO PARA MAG SEGUROS**")
                 
                 col_ex1, col_ex2, col_ex3 = st.columns(3)
                 
@@ -1339,24 +1322,7 @@ def main():
                 with col_ex5:
                     st.metric("Com juros compostos", formatar_moeda(com_ipca))
                 
-                # Explicação da fórmula HP12C
-                taxa_mensal = taxa_ipca / 100 / 12
-                st.info(f"""
-                **Fórmula HP12C para Valor Futuro de Série Uniforme:**
-                
-                FV = PMT × [((1 + i)ⁿ - 1) / i]
-                
-                Onde:
-                - PMT = {formatar_moeda(mensal_wl)} (pagamento mensal)
-                - n = {prazo} meses
-                - i = {taxa_ipca}% a.a. ÷ 12 = {taxa_mensal:.6f} ao mês
-                
-                **Cálculo:**
-                (1 + {taxa_mensal:.6f})^{prazo} = {(1 + taxa_mensal) ** prazo:.6f}
-                [(1 + i)ⁿ - 1] = {((1 + taxa_mensal) ** prazo) - 1:.6f}
-                [(1 + i)ⁿ - 1] / i = {(((1 + taxa_mensal) ** prazo) - 1) / taxa_mensal:.2f}
-                FV = {formatar_moeda(mensal_wl)} × {(((1 + taxa_mensal) ** prazo) - 1) / taxa_mensal:.2f} = {formatar_moeda(com_ipca)}
-                """)
+                st.info(f"**Fórmula:** Juros compostos aplicados mensalmente à mensalidade de {formatar_moeda(mensal_wl)} por {prazo} meses com taxa anual de {taxa_ipca}%")
             
             # Encontrar melhor custo-benefício
             seguradora_melhor_custo = min(
@@ -1466,7 +1432,7 @@ def main():
                     </div>
                 </div>
                 """, unsafe_allow_html=True)
-                st.caption("*IPCA com juros compostos (HP12C) aplicado apenas ao Whole Life")
+                st.caption("*IPCA com juros compostos aplicado apenas ao Whole Life")
                 
                 # Checklist status
                 st.markdown("#### 📋 **Coberturas Adicionais**")
@@ -1858,3 +1824,4 @@ def main():
 # Executar aplicativo
 if __name__ == "__main__":
     main()
+
