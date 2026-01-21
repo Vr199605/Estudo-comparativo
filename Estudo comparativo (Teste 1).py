@@ -387,7 +387,7 @@ def inicializar_dados():
         "Invalidez por Doença",
         "Cirurgia",
         "Quebra de Ossos",
-        "SAF (Seguro Acidente Familiar)"
+        "SAF (Seguro Assistência Funerária)"
     ]
     
     seguradoras = {
@@ -409,7 +409,7 @@ def inicializar_dados():
                 "Invalidez por Doença": {"capital": "", "mensalidade": "", "observacao": "Temporária"},
                 "Cirurgia": {"capital": "", "mensalidade": "", "observacao": "Por evento"},
                 "Quebra de Ossos": {"capital": "", "mensalidade": "", "observacao": "Por ocorrência"},
-                "SAF (Seguro Acidente Familiar)": {"capital": "", "mensalidade": "", "observacao": "Familiar"}
+                "SAF (Seguro Assistência Funerária)": {"capital": "", "mensalidade": "", "observacao": "Familiar"}
             },
             "beneficios_adicionais": ["Cobertura internacional", "Assistência 24h global", "Resgate flexível"],
             "pontos_fortes": ["Multinacional sólida", "Coberturas amplas", "Serviço premium"],
@@ -433,7 +433,7 @@ def inicializar_dados():
                 "Invalidez por Doença": {"capital": "", "mensalidade": "", "observacao": "Temporária"},
                 "Cirurgia": {"capital": "", "mensalidade": "", "observacao": "Por evento"},
                 "Quebra de Ossos": {"capital": "", "mensalidade": "", "observacao": "Por ocorrência"},
-                "SAF (Seguro Acidente Familiar)": {"capital": "", "mensalidade": "", "observacao": "Familiar"}
+                "SAF (Seguro Assistência Funerária)": {"capital": "", "mensalidade": "", "observacao": "Familiar"}
             },
             "beneficios_adicionais": ["Atuação corporativa", "Benefícios empresariais", "Rede global"],
             "pontos_fortes": ["Força corporativa", "Benefícios para empresas", "Presença global"],
@@ -457,7 +457,7 @@ def inicializar_dados():
                 "Invalidez por Doença": {"capital": "", "mensalidade": "", "observacao": "Temporária"},
                 "Cirurgia": {"capital": "", "mensalidade": "", "observacao": "Por evento"},
                 "Quebra de Ossos": {"capital": "", "mensalidade": "", "observacao": "Por ocorrência"},
-                "SAF (Seguro Acidente Familiar)": {"capital": "", "mensalidade": "", "observacao": "Familiar"}
+                "SAF (Seguro Assistência Funerária)": {"capital": "", "mensalidade": "", "observacao": "Familiar"}
             },
             "beneficios_adicionais": ["Assistência residencial", "Desconto em outros seguros", "App completo"],
             "pontos_fortes": ["Marca reconhecida", "Ampla rede", "Multi-produtos"],
@@ -481,7 +481,7 @@ def inicializar_dados():
                 "Invalidez por Doença": {"capital": "", "mensalidade": "", "observacao": "Temporária"},
                 "Cirurgia": {"capital": "", "mensalidade": "", "observacao": "Por evento"},
                 "Quebra de Ossos": {"capital": "", "mensalidade": "", "observacao": "Por ocorrência"},
-                "SAF (Seguro Acidente Familiar)": {"capital": "", "mensalidade": "", "observacao": "Familiar"}
+                "SAF (Seguro Assistência Funerária)": {"capital": "", "mensalidade": "", "observacao": "Familiar"}
             },
             "beneficios_adicionais": ["Foco familiar", "Atendimento personalizado", "Produtos simples"],
             "pontos_fortes": ["Atendimento próximo", "Produtos familiares", "Preço acessível"],
@@ -505,7 +505,7 @@ def inicializar_dados():
                 "Invalidez por Doença": {"capital": "", "mensalidade": "", "observacao": "Temporária"},
                 "Cirurgia": {"capital": "", "mensalidade": "", "observacao": "Por evento"},
                 "Quebra de Ossos": {"capital": "", "mensalidade": "", "observacao": "Por ocorrência"},
-                "SAF (Seguro Acidente Familiar)": {"capital": "", "mensalidade": "", "observacao": "Familiar"}
+                "SAF (Seguro Assistência Funerária)": {"capital": "", "mensalidade": "", "observacao": "Familiar"}
             },
             "beneficios_adicionais": ["Tradição centenária", "Foco em previdência", "Investimentos sólidos"],
             "pontos_fortes": ["Solidez financeira", "Foco em longo prazo", "Portfólio completo"],
@@ -529,7 +529,7 @@ def inicializar_dados():
                 "Invalidez por Doença": {"capital": "", "mensalidade": "", "observacao": "Temporária"},
                 "Cirurgia": {"capital": "", "mensalidade": "", "observacao": "Por evento"},
                 "Quebra de Ossos": {"capital": "", "mensalidade": "", "observacao": "Por ocorrência"},
-                "SAF (Seguro Acidente Familiar)": {"capital": "", "mensalidade": "", "observacao": "Familiar Premium"}
+                "SAF (Seguro Assistência Funerária)": {"capital": "", "mensalidade": "", "observacao": "Familiar Premium"}
             },
             "beneficios_adicionais": ["Rede saúde premium", "Atendimento exclusivo", "Serviços diferenciados"],
             "pontos_fortes": ["Saúde premium", "Atendimento exclusivo", "Coberturas amplas"],
@@ -553,7 +553,7 @@ def inicializar_dados():
                 "Invalidez por Doença": {"capital": "", "mensalidade": "", "observacao": "Temporária"},
                 "Cirurgia": {"capital": "", "mensalidade": "", "observacao": "Por evento"},
                 "Quebra de Ossos": {"capital": "", "mensalidade": "", "observacao": "Por ocorrência"},
-                "SAF (Seguro Acidente Familiar)": {"capital": "", "mensalidade": "", "observacao": "Familiar"}
+                "SAF (Seguro Assistência Funerária)": {"capital": "", "mensalidade": "", "observacao": "Familiar"}
             },
             "beneficios_adicionais": ["Foco em previdência", "Rentabilidade atrativa", "Produtos diferenciados"],
             "pontos_fortes": ["Rentabilidade", "Foco em acumulação", "Produtos inovadores"],
@@ -563,8 +563,47 @@ def inicializar_dados():
     
     return seguradoras, produtos_comuns
 
-# Função para calcular resumo financeiro com base nas observações
-def calcular_resumo_financeiro(seguradora, dados, periodo_meses, taxa_ipca, tem_assistencia_domiciliar=False, tem_seguro_viagem=False):
+# Função para calcular juros compostos estilo HP12C (valor futuro de uma série de pagamentos)
+def calcular_juros_compostos_hp12c(pmt, n, i):
+    """
+    Calcula o valor futuro (FV) usando fórmula HP12C para séries de pagamentos
+    Fórmula: FV = PMT * [(1 + i)^n - 1] / i
+    
+    Onde:
+    PMT = Pagamento mensal (valor negativo na HP12C, mas usamos positivo aqui)
+    n = Número de períodos (meses)
+    i = Taxa de juros por período (mensal)
+    
+    Esta é a fórmula para Valor Futuro de uma Série Uniforme Postecipada
+    """
+    if i <= 0 or pmt <= 0 or n <= 0:
+        return pmt * n
+    
+    # Calcular usando a fórmula HP12C
+    fv = pmt * (((1 + i) ** n) - 1) / i
+    
+    return fv
+
+# Função para calcular investimento total COM JUROS COMPOSTOS APENAS NO WHOLE LIFE
+def calcular_investimento_com_juros_compostos(mensalidade, periodo_meses, taxa_ipca_anual):
+    """Calcula o valor total investido com juros compostos aplicados mensalmente estilo HP12C"""
+    if mensalidade <= 0 or periodo_meses <= 0:
+        return mensalidade * periodo_meses
+    
+    if taxa_ipca_anual <= 0:
+        return mensalidade * periodo_meses
+    
+    # Converter taxa anual para mensal (dividir por 12, estilo HP12C simples)
+    # Na HP12C, para cálculo de séries, usamos a taxa periódica equivalente
+    taxa_mensal = taxa_ipca_anual / 100 / 12
+    
+    # Usar fórmula HP12C para valor futuro de série uniforme
+    fv = calcular_juros_compostos_hp12c(mensalidade, periodo_meses, taxa_mensal)
+    
+    return fv
+
+# Função para calcular resumo financeiro COM CORREÇÃO: Apenas Whole Life recebe correção do IPCA com juros compostos
+def calcular_resumo_financeiro(seguradora, dados, periodo_meses, taxa_ipca, tem_assistencia_domiciliar=False, tem_seguro_viagem=False, tem_telemedicina=False):
     """Calcula o resumo financeiro considerando os prazos das coberturas"""
     
     # Obter mensalidade do Whole Life
@@ -582,21 +621,28 @@ def calcular_resumo_financeiro(seguradora, dados, periodo_meses, taxa_ipca, tem_
         "total_mensalidade": 0,
         "total_capital": 0,
         "total_investimento_sem_ipca": 0,
-        "total_investimento_com_ipca": 0
+        "total_investimento_com_ipca": 0,
+        "total_investimento_whole_life_com_ipca": 0,  # Adicionado: APENAS whole life com IPCA
+        "total_investimento_outras_coberturas": 0     # Adicionado: outras coberturas sem IPCA
     }
     
-    # Calcular Whole Life (sempre vitalício)
+    # CALCULAR WHOLE LIFE COM JUROS COMPOSTOS (Apenas esta cobertura recebe correção)
     if mensal_whole_life > 0:
         total_investimento_sem_ipca_whole_life = mensal_whole_life * resultados["prazo_meses"]
         
+        # Aplicar juros compostos APENAS no Whole Life (estilo HP12C)
         if taxa_ipca > 0:
-            fator_correcao = (1 + taxa_ipca/100) ** resultados["prazo_anos"]
-            total_investimento_com_ipca_whole_life = total_investimento_sem_ipca_whole_life * fator_correcao
+            total_investimento_com_ipca_whole_life = calcular_investimento_com_juros_compostos(
+                mensal_whole_life, 
+                resultados["prazo_meses"], 
+                taxa_ipca
+            )
         else:
             total_investimento_com_ipca_whole_life = total_investimento_sem_ipca_whole_life
         
         resultados["total_investimento_sem_ipca"] += total_investimento_sem_ipca_whole_life
         resultados["total_investimento_com_ipca"] += total_investimento_com_ipca_whole_life
+        resultados["total_investimento_whole_life_com_ipca"] = total_investimento_com_ipca_whole_life  # Guardar separado
         
         # Adicionar capital do Whole Life se existir
         if "Whole Life" in dados["produtos"]:
@@ -606,7 +652,9 @@ def calcular_resumo_financeiro(seguradora, dados, periodo_meses, taxa_ipca, tem_
             resultados["total_capital"] += capital_whole_life
             resultados["total_mensalidade"] += mensal_whole_life
     
-    # Calcular outras coberturas
+    # CALCULAR OUTRAS COBERTURAS SEM CORREÇÃO DO IPCA
+    outras_coberturas_total = 0
+    
     for produto, valores in dados["produtos"].items():
         if produto == "Whole Life":
             continue
@@ -631,7 +679,7 @@ def calcular_resumo_financeiro(seguradora, dados, periodo_meses, taxa_ipca, tem_
         else:
             prazo_meses_cobertura = resultados["prazo_meses"]  # Default para vitalício
         
-        # Calcular investimento para esta cobertura
+        # Calcular investimento para esta cobertura (sem correção IPCA)
         total_investimento_cobertura = mensalidade * prazo_meses_cobertura
         
         resultados["coberturas"][produto] = {
@@ -645,17 +693,29 @@ def calcular_resumo_financeiro(seguradora, dados, periodo_meses, taxa_ipca, tem_
         resultados["total_mensalidade"] += mensalidade
         resultados["total_capital"] += capital
         resultados["total_investimento_sem_ipca"] += total_investimento_cobertura
-        resultados["total_investimento_com_ipca"] += total_investimento_cobertura
+        # OUTRAS COBERTURAS NÃO RECEBEM CORREÇÃO DO IPCA
+        outras_coberturas_total += total_investimento_cobertura
     
-    # Adicionar assistência domiciliar se selecionada
+    # Soma das outras coberturas sem correção
+    resultados["total_investimento_outras_coberturas"] = outras_coberturas_total
+    
+    # O total com IPCA é: Whole Life com juros compostos + outras coberturas sem correção
+    resultados["total_investimento_com_ipca"] = resultados["total_investimento_whole_life_com_ipca"] + outras_coberturas_total
+    
+    # Adicionar assistência domiciliar se selecionada (não soma ao mensal)
     if tem_assistencia_domiciliar:
-        resultados["total_mensalidade"] += 15.00  # Valor médio
+        # Apenas adiciona capital, não mensalidade
         resultados["total_capital"] += 2000.00   # Capital médio
     
-    # Adicionar seguro viagem se selecionado
+    # Adicionar seguro viagem se selecionado (não soma ao mensal)
     if tem_seguro_viagem:
-        resultados["total_mensalidade"] += 25.00  # Valor médio
+        # Apenas adiciona capital, não mensalidade
         resultados["total_capital"] += 5000.00   # Capital médio
+    
+    # Adicionar telemedicina se selecionada (não soma ao mensal)
+    if tem_telemedicina:
+        # Apenas adiciona capital, não mensalidade
+        resultados["total_capital"] += 1000.00   # Capital médio para cobertura de telemedicina
     
     return resultados
 
@@ -700,7 +760,7 @@ def gerar_txt(nome_cliente, idade, seguradoras_selecionadas, resultados, recomen
     texto += "• Análise de diversas coberturas\n"
     texto += "• Critérios: custo-benefício, coberturas, prazo\n"
     texto += "• Sistema de pontuação multicritério\n"
-    texto += "• Cálculos com projeção de inflação\n\n"
+    texto += "• Cálculos com projeção de inflação (IPCA aplicado apenas ao Whole Life)\n\n"
     
     texto += "🏢 SEGURADORAS ANALISADAS\n"
     texto += "-" * 40 + "\n"
@@ -718,7 +778,7 @@ def gerar_txt(nome_cliente, idade, seguradoras_selecionadas, resultados, recomen
             texto += f"  Mensalidade Whole Life: {formatar_moeda(dados['mensal_whole_life'])}\n"
             texto += f"  Prazo: {dados['prazo_meses']} meses\n"
             texto += f"  Total Investido (sem IPCA): {formatar_moeda(dados['total_investimento_sem_ipca'])}\n"
-            texto += f"  Total Investido (com IPCA): {formatar_moeda(dados['total_investimento_com_ipca'])}\n"
+            texto += f"  Total Investido (com IPCA apenas no Whole Life): {formatar_moeda(dados['total_investimento_com_ipca'])}\n"
             texto += f"  Capital Segurado Total: {formatar_moeda(dados['total_capital'])}\n"
             texto += f"  Mensalidade Total Coberturas: {formatar_moeda(dados['total_mensalidade'])}\n"
     
@@ -875,6 +935,8 @@ def main():
         st.session_state.checklist_assistencia_domiciliar = {}
     if 'checklist_seguro_viagem' not in st.session_state:
         st.session_state.checklist_seguro_viagem = {}
+    if 'checklist_telemedicina' not in st.session_state:
+        st.session_state.checklist_telemedicina = {}
     
     # Tab 1: Visão Geral
     with tab1:
@@ -907,7 +969,7 @@ def main():
             <div class='metric-container'>
                 <h4>📈 IPCA</h4>
                 <h2 style='color: #10b981;'>{taxa_ipca}%</h2>
-                <p>ao ano</p>
+                <p>ao ano (juros compostos apenas no Whole Life)</p>
             </div>
             """, unsafe_allow_html=True)
         
@@ -957,20 +1019,31 @@ def main():
                 </div>
                 """, unsafe_allow_html=True)
                 
-                # Checklist para Assistência Domiciliar
+                # Checklist para Assistência Domiciliar (NÃO SOMA AO MENSAL)
                 st.markdown("### 🏠 **Assistência Domiciliar**")
                 st.session_state.checklist_assistencia_domiciliar[seguradora] = st.checkbox(
                     "Incluir Assistência Domiciliar",
                     value=st.session_state.checklist_assistencia_domiciliar.get(seguradora, False),
-                    key=f"assistencia_{seguradora}"
+                    key=f"assistencia_{seguradora}",
+                    help="Inclui capital de R$ 2.000,00 (não adiciona à mensalidade)"
                 )
                 
-                # Checklist para Seguro Viagem
+                # Checklist para Seguro Viagem (NÃO SOMA AO MENSAL)
                 st.markdown("### ✈️ **Seguro Viagem**")
                 st.session_state.checklist_seguro_viagem[seguradora] = st.checkbox(
                     "Incluir Seguro Viagem",
                     value=st.session_state.checklist_seguro_viagem.get(seguradora, False),
-                    key=f"viagem_{seguradora}"
+                    key=f"viagem_{seguradora}",
+                    help="Inclui capital de R$ 5.000,00 (não adiciona à mensalidade)"
+                )
+                
+                # Checklist para Telemedicina (NÃO SOMA AO MENSAL)
+                st.markdown("### 🩺 **Telemedicina**")
+                st.session_state.checklist_telemedicina[seguradora] = st.checkbox(
+                    "Incluir Telemedicina",
+                    value=st.session_state.checklist_telemedicina.get(seguradora, False),
+                    key=f"telemedicina_{seguradora}",
+                    help="Inclui capital de R$ 1.000,00 (não adiciona à mensalidade)"
                 )
                 
                 st.markdown("---")
@@ -1079,7 +1152,8 @@ def main():
                     periodos_meses[seguradora],
                     taxa_ipca,
                     st.session_state.checklist_assistencia_domiciliar.get(seguradora, False),
-                    st.session_state.checklist_seguro_viagem.get(seguradora, False)
+                    st.session_state.checklist_seguro_viagem.get(seguradora, False),
+                    st.session_state.checklist_telemedicina.get(seguradora, False)
                 )
                 
                 col_res1, col_res2, col_res3, col_res4 = st.columns(4)
@@ -1097,7 +1171,9 @@ def main():
                     st.metric("Prazo Principal", f"{resultados_seguradora['prazo_meses']} meses")
                 
                 with col_res4:
-                    st.metric("Total Investido", formatar_moeda(resultados_seguradora["total_investimento_sem_ipca"]))
+                    # Mostrar valor corrigido com juros compostos
+                    st.metric("Total Investido com IPCA*", formatar_moeda(resultados_seguradora["total_investimento_com_ipca"]))
+                    st.caption("*IPCA com juros compostos (HP12C) aplicado apenas ao Whole Life")
         
         # Resumo visual das coberturas principais
         st.markdown("---")
@@ -1163,6 +1239,7 @@ def main():
     # Tab 3: Análise Financeira
     with tab3:
         st.markdown("## 💰 **ANÁLISE FINANCEIRA DETALHADA**")
+        st.markdown("**Nota:** A correção do IPCA com **juros compostos estilo HP12C** é aplicada apenas ao Whole Life.")
         
         # Calcular resultados para todas as seguradoras
         resultados_completos = {}
@@ -1175,11 +1252,12 @@ def main():
                 periodos_meses[seguradora],
                 taxa_ipca,
                 st.session_state.checklist_assistencia_domiciliar.get(seguradora, False),
-                st.session_state.checklist_seguro_viagem.get(seguradora, False)
+                st.session_state.checklist_seguro_viagem.get(seguradora, False),
+                st.session_state.checklist_telemedicina.get(seguradora, False)
             )
         
         # Gráfico de comparação
-        st.markdown("### 📈 **COMPARAÇÃO DE INVESTIMENTO TOTAL (COM IPCA)**")
+        st.markdown("### 📈 **COMPARAÇÃO DE INVESTIMENTO TOTAL (COM JUROS COMPOSTOS APENAS NO WHOLE LIFE)**")
         
         if resultados_completos:
             max_val = max([r["total_investimento_com_ipca"] for r in resultados_completos.values()])
@@ -1220,13 +1298,65 @@ def main():
                     "Prazo (meses)": dados['prazo_meses'],
                     "Prazo (anos)": f"{dados['prazo_anos']:.1f}",
                     "Invest. sem IPCA (R$)": formatar_moeda(dados['total_investimento_sem_ipca']),
-                    "Invest. com IPCA (R$)": formatar_moeda(dados['total_investimento_com_ipca']),
+                    "Invest. com IPCA* (R$)": formatar_moeda(dados['total_investimento_com_ipca']),
                     "Capital Total (R$)": formatar_moeda(dados['total_capital']),
                     "Mensalidade Total (R$)": formatar_moeda(dados['total_mensalidade'])
                 })
             
             df_comparativo = pd.DataFrame(dados_tabela)
             st.dataframe(df_comparativo, use_container_width=True)
+            st.caption("*IPCA com juros compostos (HP12C) aplicado apenas ao Whole Life")
+            
+            # Exemplo de cálculo para Mag Seguros
+            if "Mag Seguros" in resultados_completos:
+                mag_resultados = resultados_completos["Mag Seguros"]
+                mensal_wl = mag_resultados['mensal_whole_life']
+                prazo = mag_resultados['prazo_meses']
+                
+                # Cálculo detalhado
+                sem_ipca = mensal_wl * prazo
+                com_ipca = calcular_investimento_com_juros_compostos(mensal_wl, prazo, taxa_ipca)
+                
+                st.markdown("---")
+                st.markdown("### 🧮 **EXEMPLO DE CÁLCULO HP12C PARA MAG SEGUROS**")
+                
+                col_ex1, col_ex2, col_ex3 = st.columns(3)
+                
+                with col_ex1:
+                    st.metric("Mensalidade WL", formatar_moeda(mensal_wl))
+                
+                with col_ex2:
+                    st.metric("Prazo", f"{prazo} meses")
+                
+                with col_ex3:
+                    st.metric("IPCA", f"{taxa_ipca}% a.a.")
+                
+                col_ex4, col_ex5 = st.columns(2)
+                
+                with col_ex4:
+                    st.metric("Sem IPCA (simples)", formatar_moeda(sem_ipca))
+                
+                with col_ex5:
+                    st.metric("Com juros compostos", formatar_moeda(com_ipca))
+                
+                # Explicação da fórmula HP12C
+                taxa_mensal = taxa_ipca / 100 / 12
+                st.info(f"""
+                **Fórmula HP12C para Valor Futuro de Série Uniforme:**
+                
+                FV = PMT × [((1 + i)ⁿ - 1) / i]
+                
+                Onde:
+                - PMT = {formatar_moeda(mensal_wl)} (pagamento mensal)
+                - n = {prazo} meses
+                - i = {taxa_ipca}% a.a. ÷ 12 = {taxa_mensal:.6f} ao mês
+                
+                **Cálculo:**
+                (1 + {taxa_mensal:.6f})^{prazo} = {(1 + taxa_mensal) ** prazo:.6f}
+                [(1 + i)ⁿ - 1] = {((1 + taxa_mensal) ** prazo) - 1:.6f}
+                [(1 + i)ⁿ - 1] / i = {(((1 + taxa_mensal) ** prazo) - 1) / taxa_mensal:.2f}
+                FV = {formatar_moeda(mensal_wl)} × {(((1 + taxa_mensal) ** prazo) - 1) / taxa_mensal:.2f} = {formatar_moeda(com_ipca)}
+                """)
             
             # Encontrar melhor custo-benefício
             seguradora_melhor_custo = min(
@@ -1260,7 +1390,8 @@ def main():
                     periodos_meses[seguradora],
                     taxa_ipca,
                     st.session_state.checklist_assistencia_domiciliar.get(seguradora, False),
-                    st.session_state.checklist_seguro_viagem.get(seguradora, False)
+                    st.session_state.checklist_seguro_viagem.get(seguradora, False),
+                    st.session_state.checklist_telemedicina.get(seguradora, False)
                 )
         
         for seguradora in selecionadas:
@@ -1326,7 +1457,7 @@ def main():
                         <span style='font-weight: bold;'>{formatar_moeda(resultado.get('total_mensalidade', 0))}</span>
                     </div>
                     <div style='display: flex; justify-content: space-between; margin-bottom: 0.5rem;'>
-                        <span>Investimento Total:</span>
+                        <span>Investimento Total*:</span>
                         <span style='font-weight: bold;'>{formatar_moeda(resultado.get('total_investimento_com_ipca', 0))}</span>
                     </div>
                     <div style='display: flex; justify-content: space-between;'>
@@ -1335,13 +1466,23 @@ def main():
                     </div>
                 </div>
                 """, unsafe_allow_html=True)
+                st.caption("*IPCA com juros compostos (HP12C) aplicado apenas ao Whole Life")
                 
                 # Checklist status
                 st.markdown("#### 📋 **Coberturas Adicionais**")
+                check_status = []
                 if st.session_state.checklist_assistencia_domiciliar.get(seguradora, False):
-                    st.markdown("✓ **Assistência Domiciliar incluída**")
+                    check_status.append("✓ **Assistência Domiciliar**")
                 if st.session_state.checklist_seguro_viagem.get(seguradora, False):
-                    st.markdown("✓ **Seguro Viagem incluído**")
+                    check_status.append("✓ **Seguro Viagem**")
+                if st.session_state.checklist_telemedicina.get(seguradora, False):
+                    check_status.append("✓ **Telemedicina**")
+                
+                if check_status:
+                    for status in check_status:
+                        st.markdown(status)
+                else:
+                    st.info("Nenhuma cobertura adicional selecionada")
             
             st.markdown("</div>")
             st.markdown("<br>", unsafe_allow_html=True)
@@ -1451,7 +1592,8 @@ def main():
                     periodos_meses[seguradora],
                     taxa_ipca,
                     st.session_state.checklist_assistencia_domiciliar.get(seguradora, False),
-                    st.session_state.checklist_seguro_viagem.get(seguradora, False)
+                    st.session_state.checklist_seguro_viagem.get(seguradora, False),
+                    st.session_state.checklist_telemedicina.get(seguradora, False)
                 )
         
         # Sistema de pontuação
@@ -1716,8 +1858,3 @@ def main():
 # Executar aplicativo
 if __name__ == "__main__":
     main()
-
-
-
-
-
